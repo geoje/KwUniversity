@@ -1,21 +1,11 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 typedef long long ll;
+typedef vector<vector<ll>> matrix;
 
-ll *llMem;
-
-void main()
-{
-    int n;
-    cin >> n;
-
-    // For babo3()
-    llMem = new ll[n + 1]();
-    llMem[0] = llMem[1] = 1;
-    // babo3(n);
-    delete[] llMem;
-}
+ll *mem;
 
 // Recursive: O(r^n)
 ll babo1(int n)
@@ -26,7 +16,7 @@ ll babo1(int n)
 // Iterative: O(n)
 ll babo2(int n)
 {
-    int *arr = new int[n + 1];
+    ll *arr = new ll[n + 1];
     arr[0] = arr[1] = 1;
 
     for (int i = 2; i <= n; i++)
@@ -38,26 +28,85 @@ ll babo2(int n)
 // Recursive: O(n)
 ll babo3(int n)
 {
-    return llMem[n] ? llMem[n] : llMem[n] = babo3(n - 1) + babo3(n - 2) + 1;
+    return mem[n] ? mem[n] : mem[n] = babo3(n - 1) + babo3(n - 2) + 1;
 }
 
 // Matrix: O(log(n))
+matrix operator*(matrix &a, matrix &b)
+{
+    int n = a.size();
+    matrix c(n, vector<ll>(n));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            for (int k = 0; k < n; k++)
+                c[i][j] += a[i][k] * b[k][j];
+
+    return c;
+}
 ll babo4(int n)
 {
-    ll mtAns[2][2] = {{1, 1},
-                      {1, 0}};
-    ll mtMul[2][2] = {{1, 1},
-                      {1, 0}};
+    matrix ans = {
+        {1, 0, 0},
+        {0, 1, 0},
+        {0, 0, 1},
+    };
+    matrix base = {
+        {1, 1, 1},
+        {1, 0, 0},
+        {0, 0, 1},
+    };
 
     if (n < 2)
         return 1;
 
-    for (; n > 0; n >> 1)
+    for (--n; n > 0; n /= 2)
+    {
         if (n & 1)
-            ;
+            ans = ans * base;
+        base = base * base;
+    }
+
+    return ans[0][0] + ans[0][1] + ans[0][2];
 }
-ll **MulBaboMatrix(ll (*a)[2], ll (*b)[2])
+
+int main()
 {
-    ll mtMul[2][2] = {{1, 1},
-                      {1, 0}};
+    clock_t start, end;
+    int n;
+    cin >> n;
+    cout << "\n";
+
+    // cout << "---- Recursive O(r^n) ----\n";
+    // start = clock();
+    // for (int i = 0; i < n; i++)
+    //     cout << babo1(i) << ' ';
+    // end = clock();
+    // cout << "\n>> "
+    //      << ((float)end - start) / CLOCKS_PER_SEC << " sec\n\n";
+
+    cout << "---- Iterative: O(n) ----\n";
+    start = clock();
+    for (int i = 0; i < n; i++)
+        cout << babo2(i) << ' ';
+    end = clock();
+    cout << "\n>> "
+         << ((float)end - start) / CLOCKS_PER_SEC << " sec\n\n";
+
+    cout << "---- Recursive: O(n) ----\n";
+    start = clock();
+    mem = new ll[n + 1]();
+    mem[0] = mem[1] = 1;
+    for (int i = 0; i < n; i++)
+        cout << babo3(i) << ' ';
+    end = clock();
+    cout << "\n>> "
+         << ((float)end - start) / CLOCKS_PER_SEC << " sec\n\n";
+
+    cout << "---- Matrix: O(log(n)) ----\n";
+    start = clock();
+    for (int i = 0; i < n; i++)
+        cout << babo4(i) << ' ';
+    end = clock();
+    cout << "\n>> "
+         << ((float)end - start) / CLOCKS_PER_SEC << " sec\n\n";
 }
