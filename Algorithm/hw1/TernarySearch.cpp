@@ -3,14 +3,14 @@ using namespace std;
 
 int TernarySearch(int n, int *arr, int key)
 {
-    int loc = 0, left = 0, right = n - 1, mid1, mid2;
+    int left = 0, right = n - 1, mid1, mid2;
 
-    while (left <= right && !loc)
+    while (left <= right)
     {
-        if (key == arr[mid1 = left + (right - left) / 3])
-            loc = mid1;
-        else if (key == arr[mid2 = left + (right - left) * 2 / 3])
-            loc = mid2;
+        if (key == arr[mid1 = (left * 2 + right) / 3])
+            return mid1;
+        else if (key == arr[mid2 = (left + right * 2) / 3])
+            return mid2;
         else if (key < mid1)
             right = mid2 - 1;
         else if (key > mid2)
@@ -22,7 +22,7 @@ int TernarySearch(int n, int *arr, int key)
         }
     }
 
-    return loc;
+    return -1;
 }
 
 int main()
