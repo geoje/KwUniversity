@@ -1,4 +1,4 @@
-// https://www.random.org/integer-sets
+// https://www.random.org/integer-sets/?sets=1&num=30&min=1&max=99&seqnos=on&order=index&format=html&rnd=new
 
 #include <iostream>
 using namespace std;

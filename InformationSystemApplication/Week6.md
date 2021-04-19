@@ -1,6 +1,7 @@
 # Wireshark
 패킷 캡쳐 프로그램
-<br><br><br><br>
+
+<br><br><br>
 
 # Reflected XSS
 - 특정한 피해자를 대상으로 함
@@ -20,17 +21,21 @@
 5. Cookie Editor 에서 `PHPSESSID` 를 로그 파일의 내용으로 변경
 6. 새로고침 하면 왼쪽 아래에 Username 이 admin 으로 된 것을 볼 수 있음
 7. 윈도우에서 로그인 된 admin 을 로그아웃 한 후 칼리에서 새로고침 하면 세션이 끊겨서 같이 로그아웃 되는 것을 볼 수 있음
-<br><br><br><br>
+
+<br><br><br>
 
 # Stored XSS
 - 임의의 다수를 대상으로 함
 - ‘Stored’ 단어처럼 웹서버에 XSS를 저장해서 남김
-<br><br><br><br>
+
+<br><br><br>
 
 # OWASP Top 10
 특정 해마다 웹 취약점 중에서 빈도가 많고 보안상 영향을 크게 주는 10가지를 선정해서 발표됨
+
 이 취약점들을 `Mutillidae` 에서 실습 해볼 것임
-<br><br><br><br>
+
+<br><br><br>
 
 # Mutillidae
 시작하기에 앞서 `Metasplotiable2` 운영체제의 루트 권한으로 `/var/www/multillidae/config.inc` 파일을 아래 내용에 맞춰 수정하자.
