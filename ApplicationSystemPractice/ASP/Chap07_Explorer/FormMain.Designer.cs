@@ -35,20 +35,20 @@ namespace Chap07_Explorer
             this.txtPath = new System.Windows.Forms.TextBox();
             this.lblPath = new System.Windows.Forms.Label();
             this.pnlExplorer = new System.Windows.Forms.Panel();
-            this.trvDir = new System.Windows.Forms.TreeView();
-            this.lvwFile = new System.Windows.Forms.ListView();
             this.splExplorer = new System.Windows.Forms.Splitter();
+            this.lvwFile = new System.Windows.Forms.ListView();
             this.colFilename = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFileDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmsListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuDetail = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuList = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSmall = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLarge = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.imgLst = new System.Windows.Forms.ImageList(this.components);
+            this.trvDir = new System.Windows.Forms.TreeView();
             this.pnlPath.SuspendLayout();
             this.pnlExplorer.SuspendLayout();
             this.cmsListView.SuspendLayout();
@@ -92,16 +92,13 @@ namespace Chap07_Explorer
             this.pnlExplorer.Size = new System.Drawing.Size(584, 528);
             this.pnlExplorer.TabIndex = 1;
             // 
-            // trvDir
+            // splExplorer
             // 
-            this.trvDir.Dock = System.Windows.Forms.DockStyle.Left;
-            this.trvDir.ImageIndex = 0;
-            this.trvDir.ImageList = this.imgLst;
-            this.trvDir.Location = new System.Drawing.Point(0, 0);
-            this.trvDir.Name = "trvDir";
-            this.trvDir.SelectedImageIndex = 0;
-            this.trvDir.Size = new System.Drawing.Size(121, 528);
-            this.trvDir.TabIndex = 0;
+            this.splExplorer.Location = new System.Drawing.Point(121, 0);
+            this.splExplorer.Name = "splExplorer";
+            this.splExplorer.Size = new System.Drawing.Size(3, 528);
+            this.splExplorer.TabIndex = 2;
+            this.splExplorer.TabStop = false;
             // 
             // lvwFile
             // 
@@ -119,14 +116,7 @@ namespace Chap07_Explorer
             this.lvwFile.SmallImageList = this.imgLst;
             this.lvwFile.TabIndex = 1;
             this.lvwFile.UseCompatibleStateImageBehavior = false;
-            // 
-            // splExplorer
-            // 
-            this.splExplorer.Location = new System.Drawing.Point(121, 0);
-            this.splExplorer.Name = "splExplorer";
-            this.splExplorer.Size = new System.Drawing.Size(3, 528);
-            this.splExplorer.TabIndex = 2;
-            this.splExplorer.TabStop = false;
+            this.lvwFile.DoubleClick += new System.EventHandler(this.lvwFile_DoubleClick);
             // 
             // colFilename
             // 
@@ -150,42 +140,47 @@ namespace Chap07_Explorer
             this.mnuSmall,
             this.mnuLarge});
             this.cmsListView.Name = "cmsListView";
-            this.cmsListView.Size = new System.Drawing.Size(139, 120);
+            this.cmsListView.Size = new System.Drawing.Size(181, 142);
             // 
             // mnuOpen
             // 
             this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(138, 22);
+            this.mnuOpen.Size = new System.Drawing.Size(180, 22);
             this.mnuOpen.Text = "열기";
-            // 
-            // mnuDetail
-            // 
-            this.mnuDetail.Name = "mnuDetail";
-            this.mnuDetail.Size = new System.Drawing.Size(138, 22);
-            this.mnuDetail.Text = "자세히";
-            // 
-            // mnuList
-            // 
-            this.mnuList.Name = "mnuList";
-            this.mnuList.Size = new System.Drawing.Size(138, 22);
-            this.mnuList.Text = "간단히";
-            // 
-            // mnuSmall
-            // 
-            this.mnuSmall.Name = "mnuSmall";
-            this.mnuSmall.Size = new System.Drawing.Size(138, 22);
-            this.mnuSmall.Text = "작은 아이콘";
-            // 
-            // mnuLarge
-            // 
-            this.mnuLarge.Name = "mnuLarge";
-            this.mnuLarge.Size = new System.Drawing.Size(138, 22);
-            this.mnuLarge.Text = "큰 아이콘";
+            this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // mnuDetail
+            // 
+            this.mnuDetail.Name = "mnuDetail";
+            this.mnuDetail.Size = new System.Drawing.Size(180, 22);
+            this.mnuDetail.Text = "자세히";
+            this.mnuDetail.Click += new System.EventHandler(this.mnu_Click);
+            // 
+            // mnuList
+            // 
+            this.mnuList.Name = "mnuList";
+            this.mnuList.Size = new System.Drawing.Size(180, 22);
+            this.mnuList.Text = "간단히";
+            this.mnuList.Click += new System.EventHandler(this.mnu_Click);
+            // 
+            // mnuSmall
+            // 
+            this.mnuSmall.Name = "mnuSmall";
+            this.mnuSmall.Size = new System.Drawing.Size(180, 22);
+            this.mnuSmall.Text = "작은 아이콘";
+            this.mnuSmall.Click += new System.EventHandler(this.mnu_Click);
+            // 
+            // mnuLarge
+            // 
+            this.mnuLarge.Name = "mnuLarge";
+            this.mnuLarge.Size = new System.Drawing.Size(180, 22);
+            this.mnuLarge.Text = "큰 아이콘";
+            this.mnuLarge.Click += new System.EventHandler(this.mnu_Click);
             // 
             // imgLst
             // 
@@ -195,6 +190,19 @@ namespace Chap07_Explorer
             this.imgLst.Images.SetKeyName(1, "apple.png");
             this.imgLst.Images.SetKeyName(2, "steam.png");
             this.imgLst.Images.SetKeyName(3, "window.png");
+            // 
+            // trvDir
+            // 
+            this.trvDir.Dock = System.Windows.Forms.DockStyle.Left;
+            this.trvDir.ImageIndex = 0;
+            this.trvDir.ImageList = this.imgLst;
+            this.trvDir.Location = new System.Drawing.Point(0, 0);
+            this.trvDir.Name = "trvDir";
+            this.trvDir.SelectedImageIndex = 0;
+            this.trvDir.Size = new System.Drawing.Size(121, 528);
+            this.trvDir.TabIndex = 0;
+            this.trvDir.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvDir_BeforeExpand);
+            this.trvDir.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvDir_BeforeSelect);
             // 
             // FormMain
             // 
