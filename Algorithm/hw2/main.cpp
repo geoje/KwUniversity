@@ -1,100 +1,110 @@
 #include <iostream>
+#include <limits>
 #include <algorithm>
 #include <vector>
 using namespace std;
 
-typedef vector<vector<bool>> matrix;
+typedef long long ll;
 
-vector<vector<int>> sets;
-matrix dp;
 int n, *arr;
+ll **dp;
+pair<vector<int>, vector<int>> subset;
 
-void SubsetSumDP(int sum)
+ll SubsetSumDP(int sum)
 {
-    // 첫번 째 열 모두 True: 합이 0인 것은 모두 가능하니깐!
+    // 비밀이 숨겨져 있다
     for (int i = 0; i < n; i++)
-        dp[i][0] = true;
-    // 첫 요소만 미리 처리
-    dp[0][arr[0]] = true;
+        dp[i][0] = 1;
+    // 첫 요소 처리
+    dp[0][arr[0]] = 1;
 
     // DP 테이블 만들기
     for (int i = 1; i < n; i++)
-        for (int j = 1; j <= sum; j++)
-            dp[i][j] = dp[i - 1][j] || (j >= arr[i] && dp[i - 1][j - arr[i]]);
+        for (int j = 1; j <= sum; j++) {
+            dp[i][j] = dp[i - 1][j] + (j >= arr[i] ? dp[i - 1][j - arr[i]] : 0);
+            if (dp[i][j] > ULONG_MAX)
+                return -1;
+        }
+
+    return dp[n - 1][sum] / 2;
 }
-void SetsFromDP(vector<int> set, int sum, int idx)
-{
-    // 부분집합 완성
-    if (sum == 0)
-    {
-        reverse(set.begin(), set.end());
-        sets.push_back(set);
+void SubsetPair(int i, int j) {
+    if (i == 0) {
+        if (j) subset.second.push_back(arr[0]);
+        else subset.first.push_back(arr[0]);
         return;
     }
 
-    // Sum이 딱 안 맞거나 더 이상 가져올 요소가 없으면 부분집합 실패
-    if (sum < 0 || idx < 0)
-        return;
-
-    // 현재 idx 번째 요소를 가져올 수 있으면 가져오거나 or 안가져오거나
-    if (dp[idx][sum])
-    {
-        // 안가져오면 다음 요소 탐색
-        SetsFromDP(vector<int>(set), sum, idx - 1);
-
-        // 가져오면 집합에 넣고 다음 요소 탐색
-        set.push_back(arr[idx]);
-        SetsFromDP(set, sum - arr[idx], idx - 1);
+    // 내가 사용되지 않은 경우
+    if (dp[i - 1][j]) {
+        SubsetPair(i - 1, j);
+        subset.first.push_back(arr[i]);
+    }
+    // 내가 사용된 경우
+    else {
+        SubsetPair(i - 1, j - arr[i]);
+        subset.second.push_back(arr[i]);
     }
 }
 
 int main()
 {
     // Input
-
     while (!(cin >> n).fail())
     {
         arr = new int[n];
 
-        int e, sum = 0;
+        int tmp, sum = 0;
         for (int i = 0; i < n; i++)
         {
-            cin >> e;
-            arr[i] = e;
-            sum += e;
+            cin >> tmp;
+            arr[i] = tmp;
+            sum += tmp;
         }
 
         if (sum % 2)
         {
-            cout << "The sum is odd, so it can't be split in half.\n";
+            cout << "0\nNo subset (Sum is odd)\n";
             delete[] arr;
             continue;
         }
-        dp = matrix(n, vector<bool>(sum / 2 + 1));
+
+        // 2차원 배열 초기화
+        int m = sum / 2 + 1;
+        dp = new ll* [n];
+        for (int i = 0; i < n; i++)
+            dp[i] = new ll[m] { 0, };
 
         // Process
         sort(arr, arr + n);
-        SubsetSumDP(sum / 2);
-        SetsFromDP(vector<int>(), sum / 2, n - 1);
+        ll count = SubsetSumDP(sum / 2);
 
         // Output
+        if (count < 0)
+            cout << "NUMEROUS\n";
+        else if (count == 0)
+            cout << "No subset (Count is zero)\n";
+        else{
+            SubsetPair(n - 1, m - 1);
 
-        cout << sets.size() / 2 << '\n';
-        for (int i = 0, j = sets.size() - 1; i < j; i++, j--)
-        {
-            cout << '{' << sets[i][0];
-            for (int k = 1; k < sets[i].size(); k++)
-                cout << ',' << sets[i][k];
+            cout << count << "\n{" << subset.first[0];
+            for (int i = 1; i < subset.first.size(); i++)
+                cout << ',' << subset.first[i];
 
-            cout << "},{" << sets[j][0];
+            cout << "},{" << subset.second[0];
 
-            for (int k = 1; k < sets[j].size(); k++)
-                cout << ',' << sets[j][k];
+            for (int i = 1; i < subset.second.size(); i++)
+                cout << ',' << subset.second[i];
             cout << "}\n";
         }
 
-        delete[] arr;
-        sets.clear();
+        // Free allocation
+        for (int i = 0; i < n; i++)
+            delete[] dp[i];
+        delete[] dp, arr;
+
+        subset.first.clear();
+        subset.second.clear();
     }
 
     return 0;

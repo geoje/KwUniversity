@@ -140,45 +140,45 @@ namespace Chap07_Explorer
             this.mnuSmall,
             this.mnuLarge});
             this.cmsListView.Name = "cmsListView";
-            this.cmsListView.Size = new System.Drawing.Size(181, 142);
+            this.cmsListView.Size = new System.Drawing.Size(139, 120);
             // 
             // mnuOpen
             // 
             this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(180, 22);
+            this.mnuOpen.Size = new System.Drawing.Size(138, 22);
             this.mnuOpen.Text = "열기";
             this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
             // 
             // mnuDetail
             // 
             this.mnuDetail.Name = "mnuDetail";
-            this.mnuDetail.Size = new System.Drawing.Size(180, 22);
+            this.mnuDetail.Size = new System.Drawing.Size(138, 22);
             this.mnuDetail.Text = "자세히";
             this.mnuDetail.Click += new System.EventHandler(this.mnu_Click);
             // 
             // mnuList
             // 
             this.mnuList.Name = "mnuList";
-            this.mnuList.Size = new System.Drawing.Size(180, 22);
+            this.mnuList.Size = new System.Drawing.Size(138, 22);
             this.mnuList.Text = "간단히";
             this.mnuList.Click += new System.EventHandler(this.mnu_Click);
             // 
             // mnuSmall
             // 
             this.mnuSmall.Name = "mnuSmall";
-            this.mnuSmall.Size = new System.Drawing.Size(180, 22);
+            this.mnuSmall.Size = new System.Drawing.Size(138, 22);
             this.mnuSmall.Text = "작은 아이콘";
             this.mnuSmall.Click += new System.EventHandler(this.mnu_Click);
             // 
             // mnuLarge
             // 
             this.mnuLarge.Name = "mnuLarge";
-            this.mnuLarge.Size = new System.Drawing.Size(180, 22);
+            this.mnuLarge.Size = new System.Drawing.Size(138, 22);
             this.mnuLarge.Text = "큰 아이콘";
             this.mnuLarge.Click += new System.EventHandler(this.mnu_Click);
             // 
@@ -202,7 +202,7 @@ namespace Chap07_Explorer
             this.trvDir.Size = new System.Drawing.Size(121, 528);
             this.trvDir.TabIndex = 0;
             this.trvDir.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvDir_BeforeExpand);
-            this.trvDir.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvDir_BeforeSelect);
+            this.trvDir.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvDir_AfterSelect);
             // 
             // FormMain
             // 

@@ -23,7 +23,7 @@ namespace Chap07_Explorer
                 if (trvDir.SelectedNode == null)
                     trvDir.SelectedNode = root;
                 root.SelectedImageIndex = root.ImageIndex;
-                root.Nodes.Add("");
+                root.Nodes.Add(""); // 확장 버튼을 위해
             }
         }
 
@@ -32,8 +32,7 @@ namespace Chap07_Explorer
             try
             {
                 e.Node.Nodes.Clear();
-                string path = e.Node.FullPath;
-                DirectoryInfo[] dirs = new DirectoryInfo(path).GetDirectories();
+                DirectoryInfo[] dirs = new DirectoryInfo(e.Node.FullPath).GetDirectories();
 
                 foreach (DirectoryInfo dir in dirs)
                 {
@@ -46,7 +45,7 @@ namespace Chap07_Explorer
                 MessageBox.Show(ex.Message);
             }
         }
-        private void trvDir_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        private void trvDir_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
@@ -75,8 +74,9 @@ namespace Chap07_Explorer
                     item.ImageIndex = 1;
                     item.Tag = "F";
                 }
+                lvwFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -105,14 +105,13 @@ namespace Chap07_Explorer
         }
         public void OpenItem(ListViewItem item)
         {
-            TreeNode node, child;
-
             if (item.Tag.ToString() == "D")
             {
-                node = trvDir.SelectedNode;
+                TreeNode node = trvDir.SelectedNode;
                 node.Expand();
+                TreeNode child = node.FirstNode;
 
-                while ((child = node.FirstNode) != null)
+                while (child != null)
                 {
                     if (child.Text == item.Text)
                     {
@@ -139,6 +138,7 @@ namespace Chap07_Explorer
                 case "자세히":
                     mnuDetail.Checked = true;
                     lvwFile.View = View.Details;
+                    lvwFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     break;
                 case "간단히":
                     mnuList.Checked = true;
