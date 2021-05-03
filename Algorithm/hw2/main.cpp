@@ -12,6 +12,8 @@ pair<vector<int>, vector<int>> subset;
 
 ll SubsetSumDP(int sum)
 {
+    bool numerous = false;
+
     // 비밀이 숨겨져 있다
     for (int i = 0; i < n; i++)
         dp[i][0] = 1;
@@ -23,10 +25,10 @@ ll SubsetSumDP(int sum)
         for (int j = 1; j <= sum; j++) {
             dp[i][j] = dp[i - 1][j] + (j >= arr[i] ? dp[i - 1][j - arr[i]] : 0);
             if (dp[i][j] > ULONG_MAX)
-                return -1;
+                numerous = true;
         }
 
-    return dp[n - 1][sum] / 2;
+    return numerous ? -1 : dp[n - 1][sum] / 2;
 }
 void SubsetPair(int i, int j) {
     if (i == 0) {
@@ -80,14 +82,16 @@ int main()
         ll count = SubsetSumDP(sum / 2);
 
         // Output
-        if (count < 0)
-            cout << "NUMEROUS\n";
-        else if (count == 0)
+        if (count == 0)
             cout << "No subset (Count is zero)\n";
-        else{
+        else {
             SubsetPair(n - 1, m - 1);
+            if (count == -1)
+                cout << "NUMEROUS\n";
+            else
+                cout << count << '\n';
 
-            cout << count << "\n{" << subset.first[0];
+            cout << '{' << subset.first[0];
             for (int i = 1; i < subset.first.size(); i++)
                 cout << ',' << subset.first[i];
 
