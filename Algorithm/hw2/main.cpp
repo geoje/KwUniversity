@@ -65,12 +65,11 @@ int main()
     {
         arr = new int[n];
 
-        int tmp, sum = 0;
+        int sum = 0;
         for (int i = 0; i < n; i++)
         {
-            cin >> tmp;
-            arr[i] = tmp;
-            sum += tmp;
+            cin >> arr[i];
+            sum += arr[i];
         }
 
         if (sum % 2)
@@ -112,6 +111,13 @@ int main()
             for (int i = 1; i < subset.second.size(); i++)
                 cout << ',' << subset.second[i];
             cout << "}\n";
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+                cout << dp[i][j] << ' ';
+            cout << '\n';
         }
 
         // Free allocation
