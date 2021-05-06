@@ -1,7 +1,7 @@
 #include <iostream>
-#include <climits>
 #include <algorithm>
 #include <vector>
+#define DOUBLE_ULONG_MAX 8589934591 // 2^33 - 1
 using namespace std;
 
 typedef long long ll;
@@ -26,7 +26,7 @@ ll SubsetSumDP(int sum)
         for (int j = 1; j <= sum; j++)
         {
             dp[i][j] = dp[i - 1][j] + (j >= arr[i] ? dp[i - 1][j - arr[i]] : 0);
-            if (dp[i][j] > ULONG_MAX)
+            if (dp[i][j] > DOUBLE_ULONG_MAX)
                 numerous = true;
         }
 
@@ -111,13 +111,6 @@ int main()
             for (int i = 1; i < subset.second.size(); i++)
                 cout << ',' << subset.second[i];
             cout << "}\n";
-        }
-
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < m; j++)
-                cout << dp[i][j] << ' ';
-            cout << '\n';
         }
 
         // Free allocation
