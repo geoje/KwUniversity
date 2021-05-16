@@ -1,9 +1,9 @@
 CC = gcc
 CFAGS = -W -Wall
 TARGET = main
-OBJ = Disk.o fat.o testcase.o
+OBJ = Disk.o buf.o main.o
 
-$(TARGET) : $(OBJ) validate.o
+$(TARGET) : $(OBJ)
 	$(CC) -o $@ $^
 	rm $(OBJ)
 

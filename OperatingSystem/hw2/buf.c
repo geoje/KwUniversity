@@ -7,6 +7,10 @@
 
 int bufCount = 0;
 
+Buf *GetBufByBlockNo(int blkno);
+Buf *BufCreate(int blkno, BufState state);
+void BufDetach(Buf *buf);
+
 void BufInit(void)
 {
     char emptyBlock[BLOCK_SIZE] = {
