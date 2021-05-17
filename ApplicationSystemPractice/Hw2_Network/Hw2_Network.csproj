@@ -42,12 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnswerPacket.cs" />
+    <Compile Include="LoginPacket.cs" />
     <Compile Include="MyCircle.cs" />
     <Compile Include="MyLine.cs" />
     <Compile Include="MyRect.cs" />
     <Compile Include="MyShape.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShapePacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

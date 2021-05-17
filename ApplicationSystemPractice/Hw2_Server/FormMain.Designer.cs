@@ -75,6 +75,7 @@ namespace Hw2_Server
             this.tbtnLine1,
             this.tbtnLine2,
             this.tbtnLine3});
+            this.tbrTool.DropDownArrows = true;
             this.tbrTool.Enabled = false;
             this.tbrTool.ImageList = this.ilstTool;
             this.tbrTool.Location = new System.Drawing.Point(0, 0);
@@ -93,6 +94,7 @@ namespace Hw2_Server
             // 
             this.tbtnLine.ImageIndex = 1;
             this.tbtnLine.Name = "tbtnLine";
+            this.tbtnLine.Pushed = true;
             // 
             // tbtnRect
             // 
@@ -113,6 +115,7 @@ namespace Hw2_Server
             // 
             this.tbtnLine1.ImageIndex = 5;
             this.tbtnLine1.Name = "tbtnLine1";
+            this.tbtnLine1.Pushed = true;
             // 
             // tbtnLine2
             // 
@@ -196,7 +199,6 @@ namespace Hw2_Server
             this.pnlPaint.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlPaint_Paint);
             this.pnlPaint.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseDown);
             this.pnlPaint.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseMove);
-            this.pnlPaint.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlPaint_MouseUp);
             // 
             // FormMain
             // 
@@ -208,6 +210,8 @@ namespace Hw2_Server
             this.Controls.Add(this.tbrTool);
             this.Name = "FormMain";
             this.Text = "CatchMindServer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.pnlNetwork.ResumeLayout(false);
             this.pnlNetwork.PerformLayout();
             this.ResumeLayout(false);
