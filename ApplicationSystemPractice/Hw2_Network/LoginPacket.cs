@@ -1,5 +1,8 @@
-﻿namespace Hw2_Network
+﻿using System;
+
+namespace Hw2_Network
 {
+    [Serializable]
     public class LoginPacket : Packet
     {
         public string id;

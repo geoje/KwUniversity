@@ -79,6 +79,7 @@ namespace Hw2_Client
             this.btnSend.TabIndex = 2;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // btnLogin
             // 
@@ -103,6 +104,7 @@ namespace Hw2_Client
             // lblAnswer
             // 
             this.lblAnswer.AutoSize = true;
+            this.lblAnswer.Enabled = false;
             this.lblAnswer.Location = new System.Drawing.Point(308, 33);
             this.lblAnswer.Name = "lblAnswer";
             this.lblAnswer.Size = new System.Drawing.Size(29, 12);
@@ -112,6 +114,7 @@ namespace Hw2_Client
             // lblId
             // 
             this.lblId.AutoSize = true;
+            this.lblId.Enabled = false;
             this.lblId.Location = new System.Drawing.Point(57, 46);
             this.lblId.Name = "lblId";
             this.lblId.Size = new System.Drawing.Size(16, 12);
@@ -128,6 +131,7 @@ namespace Hw2_Client
             // 
             // txtAnswer
             // 
+            this.txtAnswer.Enabled = false;
             this.txtAnswer.Location = new System.Drawing.Point(343, 30);
             this.txtAnswer.Margin = new System.Windows.Forms.Padding(3, 30, 3, 29);
             this.txtAnswer.Name = "txtAnswer";
@@ -162,6 +166,7 @@ namespace Hw2_Client
             this.Controls.Add(this.panel1);
             this.Name = "FormMain";
             this.Text = "CatchMindClient";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

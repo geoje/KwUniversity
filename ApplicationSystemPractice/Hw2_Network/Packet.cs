@@ -33,7 +33,7 @@ namespace Hw2_Network
                 return ms.ToArray();
             }
         }
-        public static object Deserialize(byte[] buffer)
+        public static Packet Deserialize(byte[] buffer)
         {
             using (MemoryStream ms = new MemoryStream(BUFFER_SIZE))
             {
@@ -42,7 +42,7 @@ namespace Hw2_Network
 
                 try
                 {
-                    return new BinaryFormatter().Deserialize(ms);
+                    return new BinaryFormatter().Deserialize(ms) as Packet;
                 }
                 catch
                 {

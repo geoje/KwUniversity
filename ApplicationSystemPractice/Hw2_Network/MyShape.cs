@@ -1,7 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Hw2_Network
 {
+    [Serializable]
     public abstract class MyShape
     {
         protected int thick;

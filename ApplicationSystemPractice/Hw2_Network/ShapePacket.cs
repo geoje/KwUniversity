@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Hw2_Network
 {
+    [Serializable]
     public class ShapePacket : Packet
     {
         public List<MyShape> shapes;

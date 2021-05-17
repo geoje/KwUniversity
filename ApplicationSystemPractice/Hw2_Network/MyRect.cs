@@ -3,6 +3,7 @@ using System.Drawing;
 
 namespace Hw2_Network
 {
+    [Serializable]
     public class MyRect : MyShape
     {
         protected Rectangle rect;

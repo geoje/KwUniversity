@@ -151,6 +151,7 @@ namespace Hw2_Server
             this.btnSend.TabIndex = 3;
             this.btnSend.Text = "전송";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // lblWord
             // 
