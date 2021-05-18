@@ -11,14 +11,14 @@ typedef struct Buf Buf;
 
 typedef enum __BufState
 {
-    BUF_STATE_CLEAN,
-    BUF_STATE_DIRTY
+    BUF_STATE_DIRTY = 0,
+    BUF_STATE_CLEAN = 1
 } BufState;
 
 typedef enum __BufList
 {
-    BUF_LIST_CLEAN = 0,
-    BUF_LIST_DIRTY = 1
+    BUF_LIST_DIRTY = 0,
+    BUF_LIST_CLEAN = 1
 } StateList;
 
 struct Buf
@@ -35,7 +35,7 @@ TAILQ_HEAD(bufList, Buf) pBufList;
 
 TAILQ_HEAD(stateList, Buf) ppStateListHead[MAX_BUFLIST_NUM];
 
-TAILQ_HEAD(lrulList, Buf) pLruListHead;
+TAILQ_HEAD(lruList, Buf) pLruListHead;
 
 
 extern void BufInit(void);
