@@ -16,7 +16,6 @@ namespace Hw2_Network
     public class Packet
     {
         public const int BUFFER_SIZE = 4096;
-
         public PacketType Type;
 
         public Packet()
