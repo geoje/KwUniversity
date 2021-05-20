@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Hw2_Server
+namespace CatchMind_Server
 {
     static class Program
     {

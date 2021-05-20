@@ -1,5 +1,5 @@
 ﻿
-namespace Hw2_Server
+namespace CatchMind_Server
 {
     partial class FormMain
     {

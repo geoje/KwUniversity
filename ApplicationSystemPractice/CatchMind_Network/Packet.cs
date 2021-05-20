@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     public enum PacketType
     {
@@ -15,7 +15,7 @@ namespace Hw2_Network
     [Serializable]
     public class Packet
     {
-        public const int BUFFER_SIZE = 4096;
+        public const int BUFFER_SIZE = 65536;
         public PacketType Type;
 
         public Packet()

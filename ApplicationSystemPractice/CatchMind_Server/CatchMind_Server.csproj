@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04FBE2DA-4AB4-4D29-A20D-06A716E00BD3}</ProjectGuid>
+    <ProjectGuid>{35D24696-D445-453E-90FF-AC4106F887BD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Hw2_Client</RootNamespace>
-    <AssemblyName>Hw2_Client</AssemblyName>
+    <RootNamespace>CatchMind_Server</RootNamespace>
+    <AssemblyName>CatchMind_Server</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -65,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -80,9 +81,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hw2_Network\Hw2_Network.csproj">
+    <ProjectReference Include="..\CatchMind_Network\CatchMind_Network.csproj">
       <Project>{d48212c4-74ee-4b62-bda1-c20d8e537e6c}</Project>
-      <Name>Hw2_Network</Name>
+      <Name>CatchMind_Network</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

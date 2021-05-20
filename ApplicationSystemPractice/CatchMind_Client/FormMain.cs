@@ -1,4 +1,4 @@
-﻿using Hw2_Network;
+﻿using CatchMind_Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Hw2_Client
+namespace CatchMind_Client
 {
     public partial class FormMain : Form
     {
@@ -96,6 +96,7 @@ namespace Hw2_Client
             {
                 if (client.Connected)
                 {
+                    MessageBox.Show("서버와 연결되었습니다.");
                     lblId.Enabled = txtId.Enabled = btnLogin.Enabled = true;
                     (tReceive = new Thread(Receive)).Start();           // 클라로 부터 데이터 받기
                 }
@@ -134,12 +135,13 @@ namespace Hw2_Client
                 {
                     if ((packet as AnswerPacket).success)
                     {
-                        MessageBox.Show("맞았습니다.\n잠시 기다렸다가 다음 문제를 맞춰보세요.");
                         Invoke(new MethodInvoker(() =>
                         {
+                            txtAnswer.Clear();      // 정답 비우기
                             shapes.Clear();         // 모든 도형을 지우고
                             pnlPaint.Refresh();     // 화면 갱신
                         }));
+                        MessageBox.Show("맞았습니다.\n잠시 기다렸다가 다음 문제를 맞춰보세요.");
                     }
                     else
                         MessageBox.Show("틀렸습니다.");

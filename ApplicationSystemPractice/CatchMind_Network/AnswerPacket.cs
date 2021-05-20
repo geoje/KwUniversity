@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     [Serializable]
     public class AnswerPacket : Packet

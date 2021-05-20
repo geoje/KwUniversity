@@ -1,4 +1,4 @@
-﻿using Hw2_Network;
+﻿using CatchMind_Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Hw2_Server
+namespace CatchMind_Server
 {
     public partial class FormMain : Form
     {
@@ -108,6 +108,8 @@ namespace Hw2_Server
         /// <param name="e"></param>
         private void pnlPaint_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left) return;
+
             if (tbtnLine.Pushed) shapes.Add(new MyLine());
             else if (tbtnRect.Pushed) shapes.Add(new MyRect());
             else if (tbtnCircle.Pushed) shapes.Add(new MyCircle());
@@ -238,8 +240,15 @@ namespace Hw2_Server
         private void Send(Packet packet)
         {
             Array.Clear(sendBuffer, 0, sendBuffer.Length);  // 송신 버퍼를 비우고
-            packet.Serialize().CopyTo(sendBuffer, 0);       // 패킷을 직렬화 하고
-            client.GetStream().Write(sendBuffer, 0, sendBuffer.Length); // 송신 버퍼에 복사하고 전송
+            try
+            {
+                packet.Serialize().CopyTo(sendBuffer, 0);       // 패킷을 직렬화 하고
+                client.GetStream().Write(sendBuffer, 0, sendBuffer.Length); // 송신 버퍼에 복사하고 전송
+            }
+            catch
+            {
+                MessageBox.Show("너무 많은 도형을 보낼 수 없습니다.", "전송 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

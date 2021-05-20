@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     [Serializable]
     public class ShapePacket : Packet
