@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     [Serializable]
     public class AnswerPacket : Packet
@@ -10,12 +10,12 @@ namespace Hw2_Network
 
         public AnswerPacket(string answer)
         {
-            Type = PacketType.Shape;
+            Type = PacketType.Answer;
             this.answer = answer;
         }
         public AnswerPacket(bool success)
         {
-            Type = PacketType.Shape;
+            Type = PacketType.Answer;
             this.success = success;
         }
     }

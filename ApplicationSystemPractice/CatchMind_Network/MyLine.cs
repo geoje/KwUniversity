@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     [Serializable]
-    public class MyCircle : MyRect
+    public class MyLine : MyShape
     {
         public override void Draw(Graphics graphics)
         {
-            graphics.DrawEllipse(new Pen(Color.Black, thick), rect);
+            graphics.DrawLine(new Pen(Color.Black, thick), start, end);
         }
     }
 }

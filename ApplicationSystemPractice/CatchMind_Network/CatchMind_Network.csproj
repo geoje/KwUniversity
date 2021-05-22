@@ -7,8 +7,8 @@
     <ProjectGuid>{D48212C4-74EE-4B62-BDA1-C20D8E537E6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hw2_Network</RootNamespace>
-    <AssemblyName>Hw2_Network</AssemblyName>
+    <RootNamespace>CatchMind_Network</RootNamespace>
+    <AssemblyName>CatchMind_Network</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

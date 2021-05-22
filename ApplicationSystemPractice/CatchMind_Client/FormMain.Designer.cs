@@ -1,5 +1,5 @@
 ﻿
-namespace Hw2_Client
+namespace CatchMind_Client
 {
     partial class FormMain
     {

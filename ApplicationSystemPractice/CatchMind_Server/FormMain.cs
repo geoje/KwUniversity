@@ -1,4 +1,4 @@
-﻿using Hw2_Network;
+﻿using CatchMind_Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Hw2_Server
+namespace CatchMind_Server
 {
     public partial class FormMain : Form
     {
@@ -40,7 +40,9 @@ namespace Hw2_Server
 
             answer = new List<string>(new string[]
             {
-                "꽃", "새", "집", "구름", "나무", "태양", "자동차", 
+                "꽃", "새", "집", "달", "별", "밥", "눈", "비", "산", "강", "숲", "풀", "길", "칼", "총", "빵", "돈",
+                "구름", "나무", "태양", "바지", "신발", "안경", "지갑", "냄비", "포도", "시계", "의자", "휴지", "리본",
+                "자동차", "피아노", "컴퓨터", "모니터", "노트북", "선풍기", "셔틀콕", "세탁기", "가로등", "핸드폰"
             });
             r = new Random(DateTime.Now.Millisecond);
             isSolid = true;
@@ -49,12 +51,22 @@ namespace Hw2_Server
             recvBuffer = new byte[Packet.BUFFER_SIZE];
             sendBuffer = new byte[Packet.BUFFER_SIZE];
         }
+        /// <summary>
+        /// 폼이 열리면 서버를 실행하고 비동기적으로 클라이언트 접속을 대기한다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_Shown(object sender, EventArgs e)
         {
             listner = new TcpListener(IPAddress.Any, 4857); // 나의 전화번호
             listner.Start();                                // 서버 실행
             listner.BeginAcceptTcpClient(EndAccept, null);  // 클라이언트 받기 시작
         }
+        /// <summary>
+        /// 폼이 닫힐 때 수신 대기하던 스레드를 종료하고 클라이언트와 연결된 소켓을 닫아서 서버 종료를 알린다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (tReceive != null && tReceive.IsAlive)
@@ -62,6 +74,11 @@ namespace Hw2_Server
             listner.Stop();
         }
 
+        /// <summary>
+        /// 툴바 버튼들이 클릭 될 경우 버튼에 따라 팬를 교체한다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbrTool_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
         {
             if (e.Button == tbtnNew)
@@ -84,8 +101,15 @@ namespace Hw2_Server
                     e.Button == tbtnLine2 ? 3 : 1;                  // 선택에 따라 선 스타일 지정
             }
         }
+        /// <summary>
+        /// 패널에서 마우스를 누르면 툴바에서 선택된 도형 1개를 만들고 리스트에 추가한다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pnlPaint_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left) return;
+
             if (tbtnLine.Pushed) shapes.Add(new MyLine());
             else if (tbtnRect.Pushed) shapes.Add(new MyRect());
             else if (tbtnCircle.Pushed) shapes.Add(new MyCircle());
@@ -93,20 +117,37 @@ namespace Hw2_Server
             shapes[shapes.Count - 1].SetProperty(thick, isSolid);
             shapes[shapes.Count - 1].SetPosition(new Point(e.X, e.Y), Point.Empty);
         }
+        /// <summary>
+        /// 패널에서 마우스를 움직이면 누를 때 추가된 도형의 모양을 마우스에 맞게 변형한다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pnlPaint_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left) return;
+            if (e.Button != MouseButtons.Left) return;  // 마우스가 움직일 때 왼쪽 버튼이 누르는 중이 아니면 코드를 실행하지 않는다.
 
+            // 도형 리스트의 마지막 객체 모양을 변형하는데 마지막 객체는 누를때 추가된 것이므로 마치 그리는 것 처럼 표현 된다.
             shapes[shapes.Count - 1].SetPosition(Point.Empty, new Point(e.X, e.Y));
-            pnlPaint.Invalidate(true);
-            pnlPaint.Update();
+            pnlPaint.Invalidate(true);  // 이건 뭐지
+            pnlPaint.Update();          // 패널 갱신
         }
+        /// <summary>
+        /// 직접 그린 도형들을 패널에 모두 표시한다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pnlPaint_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
             shapes.ForEach(s => s.Draw(e.Graphics));
         }
+        /// <summary>
+        /// 클라이언트한테 직접 그린 도형들을 전송한다.
+        /// 여러번 보내도 클아이언트 측에선 곂쳐서 보이지 않고 서버에서 보이는 화면 딱 그대로 보인다.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
             Send(new ShapePacket(shapes));
@@ -192,12 +233,22 @@ namespace Hw2_Server
             }));
             listner.BeginAcceptTcpClient(EndAccept, null);      // 다시 클라 접속 대기
         }
-
+        /// <summary>
+        /// 클라이언트와 연결된 소켓을 통해 패킷을 직렬화 한 뒤 전송한다.
+        /// </summary>
+        /// <param name="packet"></param>
         private void Send(Packet packet)
         {
             Array.Clear(sendBuffer, 0, sendBuffer.Length);  // 송신 버퍼를 비우고
-            packet.Serialize().CopyTo(sendBuffer, 0);       // 패킷을 직렬화 하고
-            client.GetStream().Write(sendBuffer, 0, sendBuffer.Length); // 송신 버퍼에 복사하고 전송
+            try
+            {
+                packet.Serialize().CopyTo(sendBuffer, 0);       // 패킷을 직렬화 하고
+                client.GetStream().Write(sendBuffer, 0, sendBuffer.Length); // 송신 버퍼에 복사하고 전송
+            }
+            catch
+            {
+                MessageBox.Show("너무 많은 도형을 보낼 수 없습니다.", "전송 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

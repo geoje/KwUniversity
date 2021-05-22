@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Hw2_Network
+namespace CatchMind_Network
 {
     [Serializable]
     public class MyRect : MyShape
