@@ -11,6 +11,7 @@ bool push[20][20] = {
 bool answer[20][20] = {
     false,
 };
+bool test = true;
 
 const pair<int, int> arounds[] = {{0, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 0}};
 
@@ -58,16 +59,18 @@ void light(int i, int j)
     int ni = nextLine ? i + 1 : i;
     int nj = nextLine ? 0 : j + 1;
 
-    // 안누르고
-    light(ni, nj);
-
-    // 최적의 해를 찾았다면 업데이트
-    if (isSolution() && curCount < ansCount)
-        UpdateAnswer();
-
     // 프라미싱 하다면
     if (promising(i, j))
     {
+        // 첫째 줄 일 경우 안 눌러도 솔루션 있을 수도 있으니 체크
+        if (i == 0)
+        {
+            light(ni, nj);
+
+            // 최적의 해를 찾았다면 업데이트
+            if (isSolution() && curCount < ansCount)
+                UpdateAnswer();
+        }
 
         // 누르고
         turn(i, j);
@@ -78,17 +81,19 @@ void light(int i, int j)
         if (isSolution() && curCount < ansCount)
             UpdateAnswer();
 
-        // 원상 복귀
+        // 다시 눌러서 원래대로 만들고
         turn(i, j);
         curCount--;
     }
+    else
+        light(ni, nj);
 }
 
 int main()
 {
     char c;
     cin >> n;
-    ansCount = n + 1;
+    ansCount = n * n + 1;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
         {
