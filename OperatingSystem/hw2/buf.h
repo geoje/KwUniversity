@@ -4,8 +4,9 @@
 
 
 #define MAX_BUFLIST_NUM (2)
-#define MAX_BUF_NUM     (10)
+#define MAX_BUF_NUM     (16)
 #define BLKNO_INVALID   (-1)
+#define HASH_ENTRY_NUM  (4)
 
 typedef struct Buf Buf;
 
@@ -31,7 +32,7 @@ struct Buf
     TAILQ_ENTRY(Buf) 	llist;
 };
 
-TAILQ_HEAD(bufList, Buf) pBufList;
+TAILQ_HEAD(bufList, Buf) ppBufList[HASH_ENTRY_NUM];
 
 TAILQ_HEAD(stateList, Buf) ppStateListHead[MAX_BUFLIST_NUM];
 
@@ -42,6 +43,10 @@ extern void BufInit(void);
 extern void BufRead(int blkno, char* pData);
 extern void BufWrite(int blkno, char* pData);
 extern void BufSync(void);
+extern Buf* BufGet(int blkno);
+extern void BufSyncBlock(int blkno);
+
+
 /*
  * GetBufInfoByListNum: Get all buffers in a list specified by listnum.
  *                      This function receives a memory pointer to "ppBufInfo" that can contain the buffers.
@@ -59,7 +64,7 @@ extern void GetBufInfoInLruList(Buf** ppBufInfo, int* pNumBuf);
  * GetBufInfoInBufferList: Get all buffers in the buffer list.
  *                         This function receives a memory pointer to "ppBufInfo" that can contain the buffers.
  */
-extern void GetBufInfoInBufferList(Buf** ppBufInfo, int* pNumBuf);
+extern void GetBufInfoInBufferList(int hashEntNum, Buf** ppBufInfo, int* pNumBuf);
 
 
 #endif /* BUF_H__ */
