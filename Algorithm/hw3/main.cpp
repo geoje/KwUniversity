@@ -104,7 +104,7 @@ int main()
 
     light(0, 0);
 
-    if (ansCount == n + 1)
+    if (ansCount - 1 == n * n)
         cout << "no solution.\n";
     else
         for (int i = 0; i < n; i++)

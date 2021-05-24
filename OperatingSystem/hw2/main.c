@@ -14,7 +14,7 @@ int main(void)
 		BufWrite(i, pData);
 	}
 
-	//BufSync();
+	BufSync();
 
 	BufRead(4, pData);
 	BufRead(5, pData);
