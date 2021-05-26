@@ -106,6 +106,7 @@ void BufSyncBlock(int blkno)
 
     DevWriteBlock(buf->blkno, buf->pMem);                            // 디스크에 저장
     TAILQ_REMOVE(&ppStateListHead[BUF_LIST_DIRTY], buf, slist);      // 더티 리스트에서 제거
+    buf->state = BUF_STATE_CLEAN;                                    // 클린 상태로 변경
     TAILQ_INSERT_TAIL(&ppStateListHead[BUF_LIST_CLEAN], buf, slist); // 클린 리스트 꼬리에 추가
 }
 
@@ -157,7 +158,6 @@ void GetBufInfoByListNum(StateList listnum, Buf **ppBufInfo, int *pNumBuf)
     Buf *buf;
     int i = 0;
 
-    ppBufInfo = calloc(bufCount, sizeof(Buf));
     TAILQ_FOREACH(buf, &ppStateListHead[listnum], slist)
     {
         ppBufInfo[i++] = buf;
@@ -174,7 +174,6 @@ void GetBufInfoInLruList(Buf **ppBufInfo, int *pNumBuf)
     Buf *buf;
     int i = 0;
 
-    ppBufInfo = calloc(bufCount, sizeof(Buf));
     TAILQ_FOREACH(buf, &pLruListHead, llist)
     {
         ppBufInfo[i++] = buf;
@@ -191,7 +190,6 @@ void GetBufInfoInBufferList(int hashEntNum, Buf **ppBufInfo, int *pNumBuf)
     Buf *buf;
     int i = 0;
 
-    ppBufInfo = calloc(bufCount, sizeof(Buf));
     TAILQ_FOREACH(buf, &ppBufList[hashEntNum % HASH_ENTRY_NUM], blist)
     {
         ppBufInfo[i++] = buf;

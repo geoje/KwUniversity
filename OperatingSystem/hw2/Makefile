@@ -1,7 +1,7 @@
 CC = gcc
 CFAGS = -W -Wall
 TARGET = main
-OBJ = Disk.o buf.o main.o
+OBJ = Disk.o buf.o testcase.o
 
 $(TARGET) : $(OBJ)
 	$(CC) -o $@ $^

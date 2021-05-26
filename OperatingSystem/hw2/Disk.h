@@ -12,4 +12,11 @@ extern void DevReadBlock(int blkno, char* pBuf);
 
 extern void DevWriteBlock(int blkno, char* pBuf);
 
+extern int DevGetDiskReadCount(void);
+
+extern int DevGetDiskWriteCount(void);
+
+extern void DevResetDiskAccessCount(void);
+
 #endif /* __DISK_H__ */
+
