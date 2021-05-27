@@ -3,7 +3,7 @@ using namespace std;
 
 int dx[] = {0, -1, 0, 1};
 int dy[] = {1, 0, -1, 0};
-int n, ansCount, pushCount = 0;
+int n, ansCount, curCount = 0;
 
 bool map[20][20] = {
     false,
@@ -30,7 +30,7 @@ void turn(int i, int j)
 void light(int i, int j)
 {
     // 체크 도중 이미 나온 답보다 쓰레기인 경우 탐색 끝냄
-    if (pushCount >= ansCount)
+    if (curCount >= ansCount)
         return;
 
     // 현재 끝까지 내려 왔고
@@ -48,7 +48,7 @@ void light(int i, int j)
         if (isSolution)
         {
             // Current best와 Answer을 업데이트
-            ansCount = pushCount;
+            ansCount = curCount;
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
                     answer[i][j] = push[i][j];
@@ -65,25 +65,25 @@ void light(int i, int j)
     // Promising1: 첫번째 줄일 경우
     if (i == 0)
     {
-        int memCount = pushCount;
+        int memCount = curCount;
         // 안누르고 바로 체크
         light(ni, nj);
 
         // 누르고 체크
         turn(i, j);
-        pushCount = memCount + 1;
+        curCount = memCount + 1;
         light(ni, nj);
 
         // 체크가 끝나면 원상 복귀
         turn(i, j);
-        pushCount = memCount;
+        curCount = memCount;
     }
     // Promising2: 위쪽 전등이 켜져있을 경우
     else if (map[i - 1][j])
     {
         // 현재 위치 누르고 체크
         turn(i, j);
-        pushCount++;
+        curCount++;
         light(ni, nj);
 
         // 체크가 끝나면 원상 복귀
