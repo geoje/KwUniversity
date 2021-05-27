@@ -1,9 +1,10 @@
 #include <iostream>
 using namespace std;
 
-const pair<int, int> arounds[] = {{0, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+int dx[] = {0, -1, 0, 1};
+int dy[] = {1, 0, -1, 0};
 int n, ansCount, pushCount = 0;
-;
+
 bool map[20][20] = {
     false,
 };
@@ -16,11 +17,12 @@ bool answer[20][20] = {
 
 void turn(int i, int j)
 {
+    map[i][j] = !map[i][j];
     push[i][j] = !push[i][j];
-    for (pair<int, int> around : arounds)
+    for (int k = 0; k < 4; k++)
     {
-        int ni = i + around.first;
-        int nj = j + around.second;
+        int ni = i + dx[k];
+        int nj = j + dy[k];
         if (ni >= 0 && nj >= 0 && ni < n && nj < n)
             map[ni][nj] = !map[ni][nj];
     }
