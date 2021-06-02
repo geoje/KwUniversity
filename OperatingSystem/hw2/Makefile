@@ -1,6 +1,6 @@
 CC = gcc
 CFAGS = -W -Wall
-TARGET = main
+TARGET = hw2
 OBJ = Disk.o buf.o testcase.o
 
 $(TARGET) : $(OBJ)

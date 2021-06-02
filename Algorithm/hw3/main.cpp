@@ -107,9 +107,7 @@ int main()
                 map[i][j] = true;
         }
 
-    clock_t t = clock();
     light(0, 0);
-    cout << (double)(clock() - t) / CLOCKS_PER_SEC << " 초\n";
 
     if (ansCount - 1 == n * n)
         cout << "no solution.\n";

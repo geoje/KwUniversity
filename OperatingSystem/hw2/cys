@@ -1,0 +1,148 @@
+Hash entry num:0, Num of Bufs in the buffer list : 4
+Buf[12,D, Buf[8,D, Buf[4,D, Buf[0,D, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[13,D, Buf[9,D, Buf[5,D, Buf[1,D, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[14,D, Buf[10,D, Buf[6,D, Buf[2,D, Hash entry num:3, Num of Bufs in the buffer list : 4
+Buf[15,D, Buf[11,D, Buf[7,D, Buf[3,D, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 16
+Buf[0,D, [block 15]], Buf[1,D, [block 15]], Buf[2,D, [block 15]], Buf[3,D, [block 15]], Buf[4,D, [block 15]], Buf[5,D, [block 15]], Buf[6,D, [block 15]], Buf[7,D, [block 15]], Buf[8,D, [block 15]], Buf[9,D, [block 15]], Buf[10,D, [block 15]], Buf[11,D, [block 15]], Buf[12,D, [block 15]], Buf[13,D, [block 15]], Buf[14,D, [block 15]], Buf[15,D, [block 15]], 
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 0
+
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[0,D], Buf[1,D], Buf[2,D], Buf[3,D], Buf[4,D], Buf[5,D], Buf[6,D], Buf[7,D], Buf[8,D], Buf[9,D], Buf[10,D], Buf[11,D], Buf[12,D], Buf[13,D], Buf[14,D], Buf[15,D], 
+----------------------------------
+Hash entry num:0, Num of Bufs in the buffer list : 4
+Buf[28,D, Buf[24,D, Buf[20,D, Buf[16,D, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[29,D, Buf[25,D, Buf[21,D, Buf[17,D, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[30,D, Buf[26,D, Buf[22,D, Buf[18,D, Hash entry num:3, Num of Bufs in the buffer list : 4
+Buf[31,D, Buf[27,D, Buf[23,D, Buf[19,D, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 16
+Buf[16,D, [block 31]], Buf[17,D, [block 31]], Buf[18,D, [block 31]], Buf[19,D, [block 31]], Buf[20,D, [block 31]], Buf[21,D, [block 31]], Buf[22,D, [block 31]], Buf[23,D, [block 31]], Buf[24,D, [block 31]], Buf[25,D, [block 31]], Buf[26,D, [block 31]], Buf[27,D, [block 31]], Buf[28,D, [block 31]], Buf[29,D, [block 31]], Buf[30,D, [block 31]], Buf[31,D, [block 31]], 
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 0
+
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[16,D], Buf[17,D], Buf[18,D], Buf[19,D], Buf[20,D], Buf[21,D], Buf[22,D], Buf[23,D], Buf[24,D], Buf[25,D], Buf[26,D], Buf[27,D], Buf[28,D], Buf[29,D], Buf[30,D], Buf[31,D], 
+----------------------------------
+========= BufSync() =========
+Hash entry num:0, Num of Bufs in the buffer list : 4
+Buf[28,C, Buf[24,C, Buf[20,C, Buf[16,D, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[29,C, Buf[25,C, Buf[21,C, Buf[17,D, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[30,C, Buf[26,C, Buf[22,C, Buf[18,D, Hash entry num:3, Num of Bufs in the buffer list : 4
+Buf[31,C, Buf[27,C, Buf[23,C, Buf[19,D, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 4
+Buf[16,D, [block 31]], Buf[17,D, [block 31]], Buf[18,D, [block 31]], Buf[19,D, [block 31]], 
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 12
+Buf[20,C, [block 31]], Buf[21,C, [block 31]], Buf[22,C, [block 31]], Buf[23,C, [block 31]], Buf[24,C, [block 31]], Buf[25,C, [block 31]], Buf[26,C, [block 31]], Buf[27,C, [block 31]], Buf[28,C, [block 31]], Buf[29,C, [block 31]], Buf[30,C, [block 31]], Buf[31,C, [block 31]], 
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[16,D], Buf[17,D], Buf[18,D], Buf[19,D], Buf[20,D], Buf[21,D], Buf[22,D], Buf[23,D], Buf[24,D], Buf[25,D], Buf[26,D], Buf[27,D], Buf[28,D], Buf[29,D], Buf[30,D], Buf[31,D], 
+----------------------------------
+Disk block Info
+0 : [block 16] 1 : [block 17] 2 : [block 18] 3 : [block 19] 4 : [block 20] 5 : [block 21] 6 : [block 22] 7 : [block 23] 8 : [block 24] 9 : [block 25] 10 : [block 26] 11 : [block 27] 12 : [block 28] 13 : [block 29] 14 : [block 30] 15 : [block 31] 16 : [block 16] 17 : [block 17] 18 :  19 :  20 : [block 31] 21 : [block 31] 22 : [block 31] 23 : [block 31] 24 : [block 31] 25 : [block 31] 26 : [block 31] 27 : [block 31] 28 : [block 31] 29 : [block 31] 30 : [block 31] 31 : [block 31] 
+----------------------------------
+---------- Informaion of Disk Access Count ---------- 
+Disk Read Count : 32
+Disk Write Count : 30
+Disk Read Count + Disk Write Count : 62
+----------------------------------------------------- 
+
+ testcase 1 complete. 
+
+read[0]: testcase2: failed
+read[1]:[block 17] read[2]:[block 18] read[3]:[block 19] read[4]:[block 20] read[5]:[block 21] read[6]:[block 22] read[7]:[block 23] 
+----------------------------------
+Hash entry num:0, Num of Bufs in the buffer list : 3
+Buf[4,C, Buf[28,C, Buf[24,C, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[5,C, Buf[1,C, Buf[29,C, Buf[25,C, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[6,C, Buf[2,C, Buf[30,C, Buf[26,C, Hash entry num:3, Num of Bufs in the buffer list : 5
+Buf[7,C, Buf[3,C, Buf[31,C, Buf[27,C, Buf[23,C, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 0
+
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 16
+Buf[23,C, [block 23]], Buf[24,C, [block 23]], Buf[25,C, [block 23]], Buf[26,C, [block 23]], Buf[27,C, [block 23]], Buf[28,C, [block 23]], Buf[29,C, [block 23]], Buf[30,C, [block 23]], Buf[31,C, [block 23]], Buf[1,C, [block 23]], Buf[2,C, [block 23]], Buf[3,C, [block 23]], Buf[4,C, [block 23]], Buf[5,C, [block 23]], Buf[6,C, [block 23]], Buf[7,C, [block 23]], 
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[23,D], Buf[24,D], Buf[25,D], Buf[26,D], Buf[27,D], Buf[28,D], Buf[29,D], Buf[30,D], Buf[0,C], Buf[1,C], Buf[2,C], Buf[3,C], Buf[4,C], Buf[5,C], Buf[6,C], Buf[7,C], 
+----------------------------------
+read[8]:[block 24] read[9]:[block 25] read[10]:[block 26] read[11]:[block 27] read[12]:[block 28] read[13]:[block 29] read[14]:[block 30] read[15]:[block 31] 
+----------------------------------
+Hash entry num:0, Num of Bufs in the buffer list : 3
+Buf[12,C, Buf[8,C, Buf[4,C, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[13,C, Buf[9,C, Buf[5,C, Buf[1,C, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[14,C, Buf[10,C, Buf[6,C, Buf[2,C, Hash entry num:3, Num of Bufs in the buffer list : 5
+Buf[15,C, Buf[11,C, Buf[7,C, Buf[3,C, Buf[31,C, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 0
+
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 16
+Buf[31,C, [block 31]], Buf[1,C, [block 31]], Buf[2,C, [block 31]], Buf[3,C, [block 31]], Buf[4,C, [block 31]], Buf[5,C, [block 31]], Buf[6,C, [block 31]], Buf[7,C, [block 31]], Buf[8,C, [block 31]], Buf[9,C, [block 31]], Buf[10,C, [block 31]], Buf[11,C, [block 31]], Buf[12,C, [block 31]], Buf[13,C, [block 31]], Buf[14,C, [block 31]], Buf[15,C, [block 31]], 
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[0,C], Buf[1,C], Buf[2,C], Buf[3,C], Buf[4,C], Buf[5,C], Buf[6,C], Buf[7,C], Buf[8,C], Buf[9,C], Buf[10,C], Buf[11,C], Buf[12,C], Buf[13,C], Buf[14,C], Buf[15,C], 
+----------------------------------
+---------- Informaion of Disk Access Count ---------- 
+Disk Read Count : 15
+Disk Write Count : 4
+Disk Read Count + Disk Write Count : 19
+----------------------------------------------------- 
+
+ testcase 2 complete. 
+
+read[16]: read[17]:[block 17] read[18]:[block 18] read[19]:[block 19] read[20]:[block 31] read[21]:[block 31] read[22]:[block 31] read[23]:[block 31] read[24]:[block 31] read[25]:[block 31] read[26]:[block 31] read[27]:[block 31] read[28]:[block 31] read[29]:[block 31] read[30]:[block 31] read[31]:[block 31] 
+----------------------------------
+========= BufSync() =========
+Hash entry num:0, Num of Bufs in the buffer list : 3
+Buf[28,C, Buf[24,C, Buf[20,C, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[29,C, Buf[25,C, Buf[21,C, Buf[17,D, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[30,C, Buf[26,C, Buf[22,C, Buf[18,C, Hash entry num:3, Num of Bufs in the buffer list : 5
+Buf[31,C, Buf[27,C, Buf[23,C, Buf[19,C, Buf[31,C, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 0
+
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 16
+Buf[16,C, [block 131]], Buf[18,C, [block 131]], Buf[20,C, [block 131]], Buf[22,C, [block 131]], Buf[24,C, [block 131]], Buf[26,C, [block 131]], Buf[28,C, [block 131]], Buf[31,C, [block 131]], Buf[17,C, [block 131]], Buf[19,C, [block 131]], Buf[21,C, [block 131]], Buf[23,C, [block 131]], Buf[25,C, [block 131]], Buf[27,C, [block 131]], Buf[29,C, [block 131]], Buf[31,C, [block 131]], 
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[16,D], Buf[17,D], Buf[18,D], Buf[19,D], Buf[20,D], Buf[21,D], Buf[22,D], Buf[23,D], Buf[24,D], Buf[25,D], Buf[26,D], Buf[27,D], Buf[28,D], Buf[29,D], Buf[30,D], Buf[31,D], 
+----------------------------------
+Disk block Info
+0 : [block 16] 1 : [block 17] 2 : [block 18] 3 : [block 19] 4 : [block 20] 5 : [block 21] 6 : [block 22] 7 : [block 23] 8 : [block 24] 9 : [block 25] 10 : [block 26] 11 : [block 27] 12 : [block 28] 13 : [block 29] 14 : [block 30] 15 : [block 31] 16 : [block 116] 17 : [block 131] 18 : [block 118] 19 : [block 131] 20 : [block 120] 21 : [block 131] 22 : [block 122] 23 : [block 131] 24 : [block 124] 25 : [block 131] 26 : [block 126] 27 : [block 131] 28 : [block 128] 29 : [block 131] 30 : [block 130] 31 : [block 131] 
+----------------------------------
+========= BufSync() =========
+Hash entry num:0, Num of Bufs in the buffer list : 3
+Buf[44,C, Buf[40,C, Buf[36,C, Hash entry num:1, Num of Bufs in the buffer list : 4
+Buf[45,C, Buf[41,C, Buf[37,C, Buf[33,C, Hash entry num:2, Num of Bufs in the buffer list : 4
+Buf[46,C, Buf[42,C, Buf[38,C, Buf[34,C, Hash entry num:3, Num of Bufs in the buffer list : 5
+Buf[47,C, Buf[43,C, Buf[39,C, Buf[35,C, Buf[31,C, 
+----------------------------------
+Num of Bufs in the BUF_LIST_DIRTY : 0
+
+----------------------------------
+Num of Bufs in the BUF_LIST_CLEAN : 16
+Buf[32,C, [block 147]], Buf[33,C, [block 147]], Buf[34,C, [block 147]], Buf[35,C, [block 147]], Buf[36,C, [block 147]], Buf[37,C, [block 147]], Buf[38,C, [block 147]], Buf[39,C, [block 147]], Buf[40,C, [block 147]], Buf[41,C, [block 147]], Buf[42,C, [block 147]], Buf[43,C, [block 147]], Buf[44,C, [block 147]], Buf[45,C, [block 147]], Buf[46,C, [block 147]], Buf[47,C, [block 147]], 
+----------------------------------
+Num of Bufs in the LRU list : 16
+Buf[32,D], Buf[33,D], Buf[34,D], Buf[35,D], Buf[36,D], Buf[37,D], Buf[38,D], Buf[39,D], Buf[40,D], Buf[41,D], Buf[42,D], Buf[43,D], Buf[44,D], Buf[45,D], Buf[46,D], Buf[47,D], 
+----------------------------------
+Disk block Info
+0 : [block 16] 1 : [block 17] 2 : [block 18] 3 : [block 19] 4 : [block 20] 5 : [block 21] 6 : [block 22] 7 : [block 23] 8 : [block 24] 9 : [block 25] 10 : [block 26] 11 : [block 27] 12 : [block 28] 13 : [block 29] 14 : [block 30] 15 : [block 31] 16 : [block 116] 17 : [block 131] 18 : [block 118] 19 : [block 131] 20 : [block 120] 21 : [block 131] 22 : [block 122] 23 : [block 131] 24 : [block 124] 25 : [block 131] 26 : [block 126] 27 : [block 131] 28 : [block 128] 29 : [block 131] 30 : [block 130] 31 : [block 131] 32 : [block 147] 33 : [block 147] 34 : [block 147] 35 : [block 147] 36 : [block 147] 37 : [block 147] 38 : [block 147] 39 : [block 147] 40 : [block 147] 41 : [block 147] 42 : [block 147] 43 : [block 147] 44 : [block 147] 45 : [block 147] 46 : [block 147] 47 : [block 147] 
+----------------------------------
+---------- Informaion of Disk Access Count ---------- 
+Disk Read Count : 96
+Disk Write Count : 32
+Disk Read Count + Disk Write Count : 128
+----------------------------------------------------- 
+
+ testcase 3 complete. 
+
