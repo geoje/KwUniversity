@@ -1,14 +1,11 @@
-CC = gcc
-CFAGS = -W -Wall
-TARGET = main
-OBJ = Disk.o fat.o testcase.o
+obj = Disk.o fat.o testcase.o
 
-$(TARGET) : $(OBJ) validate.o
-	$(CC) -o $@ $^
-	rm $(OBJ)
+hw1 : $(obj) validate.o
+	gcc -o $@ $^
+	make clean
 
 .c.o: 
-	$(CC) -c ${CFLAGS} $<
+	gcc -c ${CFLAGS} $<
 
 clean :
-	rm $(OBJ)
+	rm $(obj)
