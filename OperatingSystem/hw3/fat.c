@@ -90,3 +90,15 @@ int FatRemove(int firstBlkNum, int startBlkNum)
 
    return count;
 }
+
+// Data region (130 Entry) 부터 탐색하여 빈 것 찾기
+int FatGetFreeEntryNum(void)
+{
+   const int ENTRY_NUM = BLOCK_SIZE / sizeof(int);
+   int block[ENTRY_NUM], i = DATA_START_BLOCK - 1;
+
+   do
+      BufRead(FAT_START_BLOCK + (++i) / ENTRY_NUM, (char *)block);
+   while (block[i % ENTRY_NUM]);
+   return i;
+}

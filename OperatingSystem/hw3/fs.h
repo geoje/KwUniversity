@@ -95,7 +95,7 @@ typedef struct __Directory {
 } Directory;
 
 typedef struct _FileInfo { 
-    char*     name[16];   
+    char     name[16];   
     AccessMode mode;      
     int startFatEntry;    
     FileType filetype;    
