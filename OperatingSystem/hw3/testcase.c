@@ -64,26 +64,26 @@ void TestCase1(void)
 
 	MakeDirectory("/tmp", ACCESS_MODE_READWRITE);
 	MakeDirectory("/usr", ACCESS_MODE_READWRITE);
-	// MakeDirectory("/etc", ACCESS_MODE_READWRITE);
-	// MakeDirectory("/home", ACCESS_MODE_READWRITE);
-	// /* make home directory */
-	// for (i = 0; i < 8; i++)
-	// {
-	// 	memset(dirName, 0, NAME_LEN);
-	// 	sprintf(dirName, "/home/u%d", i);
-	// 	MakeDirectory(dirName, ACCESS_MODE_READWRITE);
-	// }
-	// /* make etc directory */
-	// for (i = 0; i < 24; i++)
-	// {
-	// 	memset(dirName, 0, NAME_LEN);
-	// 	sprintf(dirName, "/etc/dev%d", i);
-	// 	MakeDirectory(dirName, ACCESS_MODE_READWRITE);
-	// }
+	MakeDirectory("/etc", ACCESS_MODE_READWRITE);
+	MakeDirectory("/home", ACCESS_MODE_READWRITE);
+	/* make home directory */
+	for (i = 0; i < 8; i++)
+	{
+		memset(dirName, 0, NAME_LEN);
+		sprintf(dirName, "/home/u%d", i);
+		MakeDirectory(dirName, ACCESS_MODE_READWRITE);
+	}
+	/* make etc directory */
+	for (i = 0; i < 24; i++)
+	{
+		memset(dirName, 0, NAME_LEN);
+		sprintf(dirName, "/etc/dev%d", i);
+		MakeDirectory(dirName, ACCESS_MODE_READWRITE);
+	}
 	// ListDirContents("/home");
 	// ListDirContents("/etc");
 
-	// /* remove subdirectory of etc directory */
+	/* remove subdirectory of etc directory */
 	// for (i = 23; i >= 0; i--)
 	// {
 	// 	memset(dirName, 0, NAME_LEN);
