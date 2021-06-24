@@ -13,6 +13,7 @@ void FileSysInit(void)
     BufInit();
     pFileTable = (FileTable *)calloc(sizeof(FileTable), 1);
     pFileDescTable = (FileDescTable *)calloc(sizeof(FileDescTable), 1);
+    pFileSysInfo = (FileSysInfo *)calloc(sizeof(FileSysInfo), 1);
 }
 
 /* 파일이 많은 폴더일 경우 여러 블록을 사용했을 테니 다음 블록 번호가 뭔지 FAT Table에서 다음 넘버를 가져옴
@@ -48,10 +49,6 @@ int AddFileToTable(File file)
 
 int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 {
-    // 파일 시스템 정보 읽기
-    FileSysInfo *fsi = malloc(BLOCK_SIZE);
-    BufRead(FILEINFO_START_BLOCK, (char *)fsi);
-
     // 현재 Fat table의 번호
     int searchEntryNo = DATA_START_BLOCK;
 
@@ -110,6 +107,11 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
                         fileOffset : 0
                     };
 
+                    // 파일 시스템 정보 업데이트
+                    pFileSysInfo->numAllocFiles++;
+                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    //BufSyncBlock(FILEINFO_START_BLOCK);
+
                     return AddFileToTable(file);
                 }
                 else
@@ -129,10 +131,10 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
                     memset(dirents, 0, BLOCK_SIZE);
 
                     // 파일 시스템 정보 업데이트
-                    fsi->numAllocBlocks++;
-                    fsi->numFreeBlocks--;
-                    BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                    BufSyncBlock(FILEINFO_START_BLOCK);
+                    pFileSysInfo->numAllocBlocks++;
+                    pFileSysInfo->numFreeBlocks--;
+                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
                 else
@@ -168,10 +170,6 @@ int RemoveFile(const char *szFileName)
 
 int MakeDirectory(const char *szDirName, AccessMode mode)
 {
-    // 파일 시스템 정보 읽기
-    FileSysInfo *fsi = malloc(BLOCK_SIZE);
-    BufRead(FILEINFO_START_BLOCK, (char *)fsi);
-
     // 현재 Fat table의 번호와 탐색중인 번호
     int curEntryNo = DATA_START_BLOCK, searchEntryNo = curEntryNo;
 
@@ -239,11 +237,11 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 BufWrite(newEntryNo, (char *)dirents);
 
                 // 파일 시스템 정보 업데이트
-                fsi->numAllocBlocks++;
-                fsi->numFreeBlocks--;
-                fsi->numAllocFiles++;
-                BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                BufSyncBlock(FILEINFO_START_BLOCK);
+                pFileSysInfo->numAllocBlocks++;
+                pFileSysInfo->numFreeBlocks--;
+                pFileSysInfo->numAllocFiles++;
+                BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                //BufSyncBlock(FILEINFO_START_BLOCK);
 
                 if (nextDirName == NULL)
                     return 0;
@@ -267,10 +265,10 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                     memset(dirents, 0, BLOCK_SIZE);
 
                     // 파일 시스템 정보 업데이트
-                    fsi->numAllocBlocks++;
-                    fsi->numFreeBlocks--;
-                    BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                    BufSyncBlock(FILEINFO_START_BLOCK);
+                    pFileSysInfo->numAllocBlocks++;
+                    pFileSysInfo->numFreeBlocks--;
+                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
                 else
@@ -285,10 +283,6 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
 
 int RemoveDirectory(const char *szDirName)
 {
-    // 파일 시스템 정보 읽기
-    FileSysInfo *fsi = malloc(BLOCK_SIZE);
-    BufRead(FILEINFO_START_BLOCK, (char *)fsi);
-
     // 현재 Fat table의 번호와 탐색중인 번호
     int curEntryNo = DATA_START_BLOCK, searchEntryNo = curEntryNo;
 
@@ -313,9 +307,9 @@ int RemoveDirectory(const char *szDirName)
                 {
                     // Fat table에서만 제거 (실제 데이터는 살아있을 수도!!)
                     FatRemove(dirents[i].startBlockNum, dirents[i].startBlockNum);
-                    fsi->numAllocBlocks--;
-                    fsi->numAllocFiles--;
-                    fsi->numFreeBlocks++;
+                    pFileSysInfo->numAllocBlocks--;
+                    pFileSysInfo->numAllocFiles--;
+                    pFileSysInfo->numFreeBlocks++;
 
                     // 디렉토리 엔트리 정보에서 제거
                     memset(dirents + i, 0, sizeof(DirEntry));
@@ -325,13 +319,13 @@ int RemoveDirectory(const char *szDirName)
                     if (i == 0)
                     {
                         FatRemove(curEntryNo, searchEntryNo);
-                        fsi->numAllocBlocks--;
-                        fsi->numFreeBlocks++;
+                        pFileSysInfo->numAllocBlocks--;
+                        pFileSysInfo->numFreeBlocks++;
                     }
 
                     // 파일시스템 업데이트
-                    BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                    BufSyncBlock(FILEINFO_START_BLOCK);
+                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 그 폴더로 들어가야 한다면 들어가기
                 else
@@ -379,22 +373,17 @@ void Format(void)
     BufWrite(DATA_START_BLOCK, (char *)dirents);
 
     // 파일 시스템 정보 설정 (루트 디렉토리 반영)
-    char fsiBuf[BLOCK_SIZE] = {
-        0,
-    };
-    FileSysInfo fsi = {
-        blocks : 3,
-        rootFatEntryNum : DATA_START_BLOCK,
-        diskCapacity : FS_DISK_CAPACITY,
-        numAllocBlocks : 1,
-        numFreeBlocks : FS_DISK_CAPACITY / BLOCK_SIZE - DATA_START_BLOCK,
-        numAllocFiles : 1,
-        fatTableStart : FAT_START_BLOCK,
-        dataStart : DATA_START_BLOCK
-    };
-    memcpy(fsiBuf, &fsi, sizeof(FileSysInfo)); // 메모리에 할당된 블럭에 파일 시스템 정보 넣기
-    BufWrite(FILEINFO_START_BLOCK, fsiBuf);    // 그 블럭을 디스크에 작성
-                                               // BufSync();
+    pFileSysInfo->blocks = 3;
+    pFileSysInfo->rootFatEntryNum = DATA_START_BLOCK;
+    pFileSysInfo->diskCapacity = FS_DISK_CAPACITY;
+    pFileSysInfo->numAllocBlocks = 1;
+    pFileSysInfo->numFreeBlocks = FS_DISK_CAPACITY / BLOCK_SIZE - DATA_START_BLOCK;
+    pFileSysInfo->numAllocFiles = 1;
+    pFileSysInfo->fatTableStart = FAT_START_BLOCK;
+    pFileSysInfo->dataStart = DATA_START_BLOCK;
+
+    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+    BufSyncBlock(FILEINFO_START_BLOCK);
 }
 
 void Mount(void)
