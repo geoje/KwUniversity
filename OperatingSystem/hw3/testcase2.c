@@ -7,6 +7,7 @@
 #include <assert.h>
 #include "fs.h"
 #include "fat.h"
+#include "buf.h"
 
 #define DIR_NUM_MAX 100
 
@@ -19,7 +20,7 @@ void PrintFileSysInfo(void)
 	void *pBuf = NULL;
 
 	pBuf = malloc(BLK_SIZE);
-	DevReadBlock(0, pBuf);
+	BufRead(0, pBuf);
 	pFileSysInfo = (FileSysInfo *)pBuf;
 	printf("File system info: # of allocated files:%d, # of allocated blocks:%d, #of free blocks:%d\n",
 		   pFileSysInfo->numAllocFiles, pFileSysInfo->numAllocBlocks, pFileSysInfo->numFreeBlocks);
@@ -183,7 +184,6 @@ void TestCase4(void)
 		}
 	}
 	printf(" ---- Test Case 4: files of even number removed ----\n");
-	ListDirContents("/home/u7");
 
 	for (i = 0; i < 9; i++)
 	{
@@ -231,34 +231,54 @@ void TestCase5(void)
 
 int main(int argc, char **argv)
 {
+	int TcNum;
+
+	if (argc < 3)
+	{
+	ERROR:
+		printf("usage: a.out [format | readwrite] [1-5])\n");
+		return -1;
+	}
 	FileSysInit();
-	Format();
+	if (strcmp(argv[1], "format") == 0)
+		Format();
+	else if (strcmp(argv[1], "readwrite") == 0)
+		Mount();
+	else
+		goto ERROR;
+
+	TcNum = atoi(argv[2]);
 
 	DevResetDiskAccessCount();
-	TestCase1();
-	Unmount();
-	PrintFileSysInfo();
-	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
-	DevResetDiskAccessCount();
-	Mount();
-	TestCase2();
+	switch (TcNum)
+	{
+	case 1:
+		TestCase1();
+		PrintFileSysInfo();
+		break;
+	case 2:
+		TestCase2();
+		PrintFileSysInfo();
+		break;
+	case 3:
+		TestCase3();
+		PrintFileSysInfo();
+		break;
+	case 4:
+		TestCase4();
+		PrintFileSysInfo();
+		break;
+	case 5:
+		TestCase5();
+		PrintFileSysInfo();
+		break;
+	default:
+		Unmount();
+		goto ERROR;
+	}
 	Unmount();
-	PrintFileSysInfo();
-	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
-	DevResetDiskAccessCount();
-	Mount();
-	TestCase3();
-	Unmount();
-	PrintFileSysInfo();
-	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
-
-	DevResetDiskAccessCount();
-	Mount();
-	TestCase4();
-	Unmount();
-	PrintFileSysInfo();
 	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
 	return 0;

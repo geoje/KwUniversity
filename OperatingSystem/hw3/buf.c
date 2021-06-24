@@ -12,8 +12,6 @@ void BufDetach(Buf *buf);
 
 void BufInit(void)
 {
-    DevCreateDisk();
-
     for (int i = 0; i < HASH_ENTRY_NUM; i++)
         TAILQ_INIT(&ppBufList[i]);
     TAILQ_INIT(&ppStateListHead[BUF_LIST_CLEAN]);

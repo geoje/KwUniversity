@@ -538,6 +538,8 @@ int RemoveDirectory(const char *szDirName)
 
 void Format(void)
 {
+    DevCreateDisk();
+
     FatAdd(-1, DATA_START_BLOCK); // 130번 Entry에 -1 넣기
 
     // 루트 디렉토리 생성
@@ -567,6 +569,8 @@ void Format(void)
 
 void Mount(void)
 {
+    DevOpenDisk();
+
     pFileTable = (FileTable *)calloc(sizeof(FileTable), 1);
     pFileDescTable = (FileDescTable *)calloc(sizeof(FileDescTable), 1);
     pFileSysInfo = (FileSysInfo *)calloc(sizeof(FileSysInfo), 1);
