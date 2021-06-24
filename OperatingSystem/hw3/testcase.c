@@ -230,59 +230,21 @@ void TestCase5(void)
 
 int main(int argc, char **argv)
 {
-	int TcNum;
-
-	// 	if (argc < 3)
-	// 	{
-	// ERROR:
-	// 		printf("usage: a.out [format | readwrite] [1-5])\n");
-	// 		return -1;
-	// 	}
-	// 	FileSysInit();
-	// 	if (strcmp(argv[1], "format") == 0)
-	// 		Format();
-	// 	else if (strcmp(argv[1], "readwrite") == 0)
-	// 		Mount();
-	// 	else
-	// 		goto ERROR;
-
 	FileSysInit();
 	Format();
-	TcNum = 1;
-
-	// TcNum = atoi(argv[2]);
 
 	DevResetDiskAccessCount();
-
-	switch (TcNum)
-	{
-	case 1:
-		TestCase1();
-		PrintFileSysInfo();
-		break;
-	case 2:
-		TestCase2();
-		PrintFileSysInfo();
-		break;
-	case 3:
-		TestCase3();
-		PrintFileSysInfo();
-		break;
-	case 4:
-		TestCase4();
-		PrintFileSysInfo();
-		break;
-	case 5:
-		TestCase5();
-		PrintFileSysInfo();
-		break;
-	default:
-		Unmount();
-		// goto ERROR;
-	}
+	TestCase1();
+	PrintFileSysInfo();
 	Unmount();
-
 	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
+
+	// Mount();
+	// DevResetDiskAccessCount();
+	// TestCase2();
+	// PrintFileSysInfo();
+	// Unmount();
+	// printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
 	return 0;
 }
