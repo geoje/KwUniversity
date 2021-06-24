@@ -157,15 +157,52 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 
 int WriteFile(int fileDesc, char *pBuffer, int length)
 {
+    File file = pFileTable->pFile[pFileDescTable->pEntry[fileDesc].fileTableIndex];
+    int newEntryNo = FatGetFreeEntryNum();
+
+    // Fat table 추가
+    FatAdd(-1, newEntryNo);
+
+    // 파일이 있는 디렉토리의 해당 엔트리 업데이트
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(file.dirBlkNum, (char *)dirents);
+    dirents[file.entryIndex].startBlockNum = newEntryNo;
+    dirents[file.entryIndex].numBlocks = 1;
+    BufWrite(file.dirBlkNum, (char *)dirents);
+
+    // 파일에 해당하는 블럭 작성
+    char block[BLOCK_SIZE] = {
+        0,
+    };
+    memcpy(block, pBuffer, length);
+    BufWrite(newEntryNo, block);
+
+    // 파일시스템 정보 변경
+    pFileSysInfo->numAllocBlocks++;
+    pFileSysInfo->numFreeBlocks--;
+    UpdateFileSysInfoBuf();
 }
 
 int ReadFile(int fileDesc, char *pBuffer, int length)
 {
+    File file = pFileTable->pFile[pFileDescTable->pEntry[fileDesc].fileTableIndex];
+
+    // 디렉토리 내에서 파일에 해당하는 엔트리 정보 읽기
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(file.dirBlkNum, (char *)dirents);
+    char block[BLOCK_SIZE] = {
+        0,
+    };
+    BufRead(dirents[file.entryIndex].startBlockNum, block);
+
+    // Call by reference로 반환
+    memcpy(pBuffer, block, length);
+    return 0;
 }
 
 int CloseFile(int fileDesc)
 {
-    memset(pFileTable->pFile + fileDesc, 0, sizeof(File));
+    memset(pFileTable->pFile + pFileDescTable->pEntry[fileDesc].fileTableIndex, 0, sizeof(File));
     memset(pFileDescTable->pEntry + fileDesc, 0, sizeof(DescEntry));
 
     pFileTable->numUsedFile--;
