@@ -79,11 +79,17 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
                 // 마지막 파일 이름이고 타입이 파일이면 그냥 열기
                 if (nextName == NULL)
                 {
+                    // 존재하는 파일 열기
                     if (dirents[i].filetype == FILE_TYPE_FILE)
                     {
-                        // TODO 존재하는 파일 열기
-                        // File file = NULL;
-                        // return AddFileToTable(file);
+                        File file = {
+                            bUsed : 1,
+                            flag : flag,
+                            dirBlkNum : searchEntryNo,
+                            entryIndex : i,
+                            fileOffset : 0
+                        };
+                        return AddFileToTable(file);
                     }
                 }
                 else if (dirents[i].filetype == FILE_TYPE_DIR)
