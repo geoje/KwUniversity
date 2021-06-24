@@ -164,29 +164,56 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 int WriteFile(int fileDesc, char *pBuffer, int length)
 {
     File file = pFileTable->pFile[pFileDescTable->pEntry[fileDesc].fileTableIndex];
-    int newEntryNo = FatGetFreeEntryNum(), lastEntryNo = -1;
 
-    // Fat table 추가
-    FatAdd(lastEntryNo, newEntryNo);
-
-    // 파일이 있는 디렉토리의 해당 엔트리 업데이트
+    // 파일이 있는 디렉토리 엔트리 읽기
     DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
     BufRead(file.dirBlkNum, (char *)dirents);
+
+    // 기존에 파일이 쓰여있을 경우 제거
+    if (dirents[file.entryIndex].startBlockNum != -1)
+    {
+        int count = FatRemove(dirents[file.entryIndex].startBlockNum,
+                              dirents[file.entryIndex].startBlockNum);
+
+        // 파일시스템 정보 변경
+        pFileSysInfo->numAllocBlocks -= count;
+        pFileSysInfo->numFreeBlocks += count;
+        UpdateFileSysInfoBuf();
+    }
+
+    // 엔트리 업데이트
+    int newEntryNo = FatGetFreeEntryNum(), lastEntryNo = -1;
     dirents[file.entryIndex].startBlockNum = newEntryNo;
-    dirents[file.entryIndex].numBlocks = 1;
+    dirents[file.entryIndex].numBlocks = 0;
+
+    while (length > 0)
+    {
+        // Fat table 추가
+        FatAdd(lastEntryNo, newEntryNo);
+
+        // 파일에 해당하는 블럭 작성
+        char block[BLOCK_SIZE] = {
+            0,
+        };
+        memcpy(block, pBuffer, length > BLOCK_SIZE ? BLOCK_SIZE : length);
+        BufWrite(newEntryNo, block);
+
+        // 엔트리 업데이트
+        dirents[file.entryIndex].numBlocks++;
+
+        // 파일시스템 정보 변경
+        pFileSysInfo->numAllocBlocks++;
+        pFileSysInfo->numFreeBlocks--;
+        UpdateFileSysInfoBuf();
+
+        // 연속 저장을 위해 변수 업데이트
+        length -= BLOCK_SIZE;
+        lastEntryNo = newEntryNo;
+        newEntryNo = FatGetFreeEntryNum();
+    }
+
+    // 엔트리 업데이트
     BufWrite(file.dirBlkNum, (char *)dirents);
-
-    // 파일에 해당하는 블럭 작성
-    char block[BLOCK_SIZE] = {
-        0,
-    };
-    memcpy(block, pBuffer, length);
-    BufWrite(newEntryNo, block);
-
-    // 파일시스템 정보 변경
-    pFileSysInfo->numAllocBlocks++;
-    pFileSysInfo->numFreeBlocks--;
-    UpdateFileSysInfoBuf();
 }
 
 int ReadFile(int fileDesc, char *pBuffer, int length)
@@ -258,9 +285,8 @@ int RemoveFile(const char *szFileName)
                         FatRemove(removeEntryNo, searchEntryNo);
                         pFileSysInfo->numAllocBlocks--;
                         pFileSysInfo->numFreeBlocks++;
+                        UpdateFileSysInfoBuf();
                     }
-                    // 파일 Fat table 에서 제거
-                    FatRemove(dirents[i].startBlockNum, dirents[i].startBlockNum);
 
                     // 마지막 엔트리 백업 후 없애기
                     DirEntry de;
@@ -268,8 +294,19 @@ int RemoveFile(const char *szFileName)
                     memset(dirents + i, 0, sizeof(DirEntry));
                     BufWrite(searchEntryNo, (char *)dirents);
 
-                    // 마지막 엔트리를 제거된 위치로 옮기기
+                    // 제거 될 위치 디렉토리 엔트리 불러오기
                     BufRead(removeEntryNo, (char *)dirents);
+
+                    // 파일 Fat table 에서 제거
+                    int count = FatRemove(dirents[removeEntryIndex].startBlockNum,
+                                          dirents[removeEntryIndex].startBlockNum);
+
+                    pFileSysInfo->numAllocBlocks -= count;
+                    pFileSysInfo->numFreeBlocks += count;
+                    pFileSysInfo->numAllocFiles--;
+                    UpdateFileSysInfoBuf();
+
+                    // 마지막 엔트리를 제거된 위치로 옮기기
                     memcpy(dirents + removeEntryIndex, &de, sizeof(DirEntry));
                     BufWrite(removeEntryNo, (char *)dirents);
 
