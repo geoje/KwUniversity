@@ -164,10 +164,10 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 int WriteFile(int fileDesc, char *pBuffer, int length)
 {
     File file = pFileTable->pFile[pFileDescTable->pEntry[fileDesc].fileTableIndex];
-    int newEntryNo = FatGetFreeEntryNum();
+    int newEntryNo = FatGetFreeEntryNum(), lastEntryNo = -1;
 
     // Fat table 추가
-    FatAdd(-1, newEntryNo);
+    FatAdd(lastEntryNo, newEntryNo);
 
     // 파일이 있는 디렉토리의 해당 엔트리 업데이트
     DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
