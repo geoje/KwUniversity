@@ -65,12 +65,22 @@ int FatRemove(int firstBlkNum, int startBlkNum)
    while (1)
    {
       BufRead(FAT_START_BLOCK + firstBlkNum / ENTRY_NUM, (char *)block);
-      if ((nextBlkNum = block[firstBlkNum % ENTRY_NUM]) <= 0)
-         return -1;
-
-      if (nextBlkNum == startBlkNum || firstBlkNum == startBlkNum)
+      nextBlkNum = block[firstBlkNum % ENTRY_NUM];
+      if (nextBlkNum <= 0)
       {
-         block[firstBlkNum % ENTRY_NUM] = firstBlkNum == startBlkNum ? 0 : -1;
+         if (firstBlkNum == startBlkNum)
+         {
+            block[firstBlkNum % ENTRY_NUM] = 0;
+            BufWrite(FAT_START_BLOCK + firstBlkNum / ENTRY_NUM, (char *)block);
+            return 1;
+         }
+         else
+            return -1;
+      }
+
+      if (nextBlkNum == startBlkNum)
+      {
+         block[firstBlkNum % ENTRY_NUM] = -1;
          BufWrite(FAT_START_BLOCK + firstBlkNum / ENTRY_NUM, (char *)block);
          break;
       }
