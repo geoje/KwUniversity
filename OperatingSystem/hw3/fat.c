@@ -68,9 +68,9 @@ int FatRemove(int firstBlkNum, int startBlkNum)
       if ((nextBlkNum = block[firstBlkNum % ENTRY_NUM]) <= 0)
          return -1;
 
-      if (nextBlkNum == startBlkNum)
+      if (nextBlkNum == startBlkNum || firstBlkNum == startBlkNum)
       {
-         block[firstBlkNum % ENTRY_NUM] = -1;
+         block[firstBlkNum % ENTRY_NUM] = firstBlkNum == startBlkNum ? 0 : -1;
          BufWrite(FAT_START_BLOCK + firstBlkNum / ENTRY_NUM, (char *)block);
          break;
       }

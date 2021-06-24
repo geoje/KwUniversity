@@ -84,13 +84,13 @@ void TestCase1(void)
 	ListDirContents("/etc");
 
 	/* remove subdirectory of etc directory */
-	// for (i = 23; i >= 0; i--)
-	// {
-	// 	memset(dirName, 0, NAME_LEN);
-	// 	sprintf(dirName, "/etc/dev%d", i);
-	// 	RemoveDirectory(dirName);
-	// }
-	// ListDirContents("/etc");
+	for (i = 23; i >= 0; i--)
+	{
+		memset(dirName, 0, NAME_LEN);
+		sprintf(dirName, "/etc/dev%d", i);
+		RemoveDirectory(dirName);
+	}
+	ListDirContents("/etc");
 }
 
 void TestCase2(void)

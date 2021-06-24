@@ -114,7 +114,6 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 BufWrite(newEntryNo, (char *)dirents);
 
                 // 파일 시스템 정보 업데이트
-                fsi->blocks++;
                 fsi->numAllocBlocks++;
                 fsi->numFreeBlocks--;
                 fsi->numAllocFiles++;
@@ -143,7 +142,6 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                     memset(dirents, 0, BLOCK_SIZE);
 
                     // 파일 시스템 정보 업데이트
-                    fsi->blocks++;
                     fsi->numAllocBlocks++;
                     fsi->numFreeBlocks--;
                     BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
@@ -162,6 +160,82 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
 
 int RemoveDirectory(const char *szDirName)
 {
+    // 파일 시스템 정보 읽기
+    FileSysInfo *fsi = malloc(BLOCK_SIZE);
+    BufRead(FILEINFO_START_BLOCK, (char *)fsi);
+
+    // 현재 Fat table의 번호와 탐색중인 번호
+    int curEntryNo = DATA_START_BLOCK, searchEntryNo = curEntryNo;
+
+    // 현재 보고 있는 디렉토리 엔트리
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(DATA_START_BLOCK, (char *)dirents);
+
+    // 인자로 받은 경로를 쪼갠 뒤 순차적으로 탐색 후 폴더 제거
+    char fullPath[BLOCK_SIZE];
+    strcpy(fullPath, szDirName);
+    char *curDirName = strtok(fullPath, "/");
+    char *nextDirName = strtok(NULL, "/");
+    while (curDirName != NULL)
+    {
+        for (int i = 0;; i++)
+        {
+            // 폴더를 발견했다면
+            if (strcmp(curDirName, dirents[i].name) == 0)
+            {
+                // 마지막 폴더일 경우 제거 처리 시작
+                if (nextDirName == NULL)
+                {
+                    // Fat table에서만 제거 (실제 데이터는 살아있을 수도!!)
+                    FatRemove(dirents[i].startBlockNum, dirents[i].startBlockNum);
+                    fsi->numAllocBlocks--;
+                    fsi->numAllocFiles--;
+                    fsi->numFreeBlocks++;
+
+                    // 디렉토리 엔트리 정보에서 제거
+                    memset(dirents + i, 0, sizeof(DirEntry));
+                    BufWrite(searchEntryNo, (char *)dirents);
+
+                    // 첫번째 항목 제거될 경우 엔트리 하나 연결 끊기
+                    if (i == 0)
+                    {
+                        FatRemove(curEntryNo, searchEntryNo);
+                        fsi->numAllocBlocks--;
+                        fsi->numFreeBlocks++;
+                    }
+
+                    // 파일시스템 업데이트
+                    BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
+                    BufSyncBlock(FILEINFO_START_BLOCK);
+                }
+                // 그 폴더로 들어가야 한다면 들어가기
+                else
+                {
+                    searchEntryNo = curEntryNo = dirents[i].startBlockNum;
+                    BufRead(searchEntryNo, (char *)dirents);
+                    break;
+                }
+            }
+            // 현재 서칭 폴더 명이 없을 경우 실패
+            else if (strlen(dirents[i].name) == 0)
+                return -1;
+
+            // 마지막 엔트리까지 봤을 경우 현재 폴더 다음 블럭 서칭 (다음 블럭이 있을 경우만)
+            if (i == NUM_OF_DIRENT_PER_BLK - 1)
+            {
+                // 다음 폴더 연결된 것이 없을 경우 실패!
+                int nextEntryNo = GetNextEntryNo(searchEntryNo);
+                if (nextEntryNo == -1)
+                    return -1;
+                // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
+                else
+                    BufRead(searchEntryNo = nextEntryNo, (char *)dirents);
+                i = -1; // 처음부터 4개 다시 탐색
+            }
+        }
+        curDirName = nextDirName;
+        nextDirName = strtok(NULL, "/");
+    }
 }
 
 void Format(void)
@@ -210,7 +284,7 @@ void Unmount(void)
 Directory *OpenDirectory(char *szDirName)
 {
     // 현재 Fat table의 번호
-    int curEntryNo = DATA_START_BLOCK;
+    int searchEntryNo = DATA_START_BLOCK;
 
     // 현재 보고 있는 디렉토리 엔트리
     DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
@@ -228,8 +302,8 @@ Directory *OpenDirectory(char *szDirName)
             // 폴더를 찾았을 경우
             if (strcmp(curDirName, dirents[i].name) == 0)
             {
-                curEntryNo = dirents[i].startBlockNum;
-                BufRead(curEntryNo, (char *)dirents);
+                searchEntryNo = dirents[i].startBlockNum;
+                BufRead(searchEntryNo, (char *)dirents);
 
                 // 마지막 폴더이면
                 if (nextDirName == NULL)
@@ -249,12 +323,12 @@ Directory *OpenDirectory(char *szDirName)
             if (i == NUM_OF_DIRENT_PER_BLK - 1)
             {
                 // 다음 폴더 연결된 것이 없을 경우 새로 만들고 연결시키기!
-                int nextEntryNo = GetNextEntryNo(curEntryNo);
+                int nextEntryNo = GetNextEntryNo(searchEntryNo);
                 if (nextEntryNo == -1)
                     return NULL;
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
                 else
-                    BufRead(curEntryNo = nextEntryNo, (char *)dirents);
+                    BufRead(searchEntryNo = nextEntryNo, (char *)dirents);
                 i = -1; // 처음부터 4개 다시 탐색
             }
         }
