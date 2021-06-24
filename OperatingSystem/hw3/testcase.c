@@ -235,14 +235,23 @@ int main(int argc, char **argv)
 
 	DevResetDiskAccessCount();
 	TestCase1();
+	Unmount();
 	PrintFileSysInfo();
 	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
 	DevResetDiskAccessCount();
+	Mount();
 	TestCase2();
-	PrintFileSysInfo();
 	Unmount();
+	PrintFileSysInfo();
 	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
+
+	// DevResetDiskAccessCount();
+	// Mount();
+	// TestCase3();
+	// PrintFileSysInfo();
+	// Unmount();
+	// printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
 
 	return 0;
 }

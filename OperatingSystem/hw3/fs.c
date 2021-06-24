@@ -46,6 +46,14 @@ int AddFileToTable(File file)
         return i;
     }
 }
+void UpdateFileSysInfoBuf()
+{
+    char fsiBuf[BLOCK_SIZE] = {
+        0,
+    };
+    memcpy(fsiBuf, pFileSysInfo, sizeof(FileSysInfo));
+    BufWrite(FILEINFO_START_BLOCK, fsiBuf);
+}
 
 int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 {
@@ -109,7 +117,7 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 
                     // 파일 시스템 정보 업데이트
                     pFileSysInfo->numAllocFiles++;
-                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    UpdateFileSysInfoBuf();
                     //BufSyncBlock(FILEINFO_START_BLOCK);
 
                     return AddFileToTable(file);
@@ -133,7 +141,7 @@ int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
                     // 파일 시스템 정보 업데이트
                     pFileSysInfo->numAllocBlocks++;
                     pFileSysInfo->numFreeBlocks--;
-                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    UpdateFileSysInfoBuf();
                     //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
@@ -240,7 +248,7 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 pFileSysInfo->numAllocBlocks++;
                 pFileSysInfo->numFreeBlocks--;
                 pFileSysInfo->numAllocFiles++;
-                BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                UpdateFileSysInfoBuf();
                 //BufSyncBlock(FILEINFO_START_BLOCK);
 
                 if (nextDirName == NULL)
@@ -267,7 +275,7 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                     // 파일 시스템 정보 업데이트
                     pFileSysInfo->numAllocBlocks++;
                     pFileSysInfo->numFreeBlocks--;
-                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    UpdateFileSysInfoBuf();
                     //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
@@ -324,7 +332,7 @@ int RemoveDirectory(const char *szDirName)
                     }
 
                     // 파일시스템 업데이트
-                    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+                    UpdateFileSysInfoBuf();
                     //BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 그 폴더로 들어가야 한다면 들어가기
@@ -382,12 +390,21 @@ void Format(void)
     pFileSysInfo->fatTableStart = FAT_START_BLOCK;
     pFileSysInfo->dataStart = DATA_START_BLOCK;
 
-    BufWrite(FILEINFO_START_BLOCK, (char *)pFileSysInfo);
+    UpdateFileSysInfoBuf();
     BufSyncBlock(FILEINFO_START_BLOCK);
 }
 
 void Mount(void)
 {
+    pFileTable = (FileTable *)calloc(sizeof(FileTable), 1);
+    pFileDescTable = (FileDescTable *)calloc(sizeof(FileDescTable), 1);
+    pFileSysInfo = (FileSysInfo *)calloc(sizeof(FileSysInfo), 1);
+
+    char fsiBuf[BLOCK_SIZE] = {
+        0,
+    };
+    BufRead(FILEINFO_START_BLOCK, fsiBuf);
+    memcpy(pFileSysInfo, fsiBuf, sizeof(FileSysInfo));
 }
 
 void Unmount(void)
@@ -395,6 +412,7 @@ void Unmount(void)
     BufSync();
     free(pFileTable);
     free(pFileDescTable);
+    free(pFileSysInfo);
 }
 
 Directory *OpenDirectory(char *szDirName)
