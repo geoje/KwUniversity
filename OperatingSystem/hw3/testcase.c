@@ -80,8 +80,8 @@ void TestCase1(void)
 		sprintf(dirName, "/etc/dev%d", i);
 		MakeDirectory(dirName, ACCESS_MODE_READWRITE);
 	}
-	// ListDirContents("/home");
-	// ListDirContents("/etc");
+	ListDirContents("/home");
+	ListDirContents("/etc");
 
 	/* remove subdirectory of etc directory */
 	// for (i = 23; i >= 0; i--)

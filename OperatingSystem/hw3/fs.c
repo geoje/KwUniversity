@@ -47,18 +47,19 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
     FileSysInfo *fsi = malloc(BLOCK_SIZE);
     BufRead(FILEINFO_START_BLOCK, (char *)fsi);
 
-    // 새로 만들 디렉토리 경로를 슬래시 기준으로 쪼개기 위함
-    char fullPath[BLOCK_SIZE];
-    strcpy(fullPath, szDirName);
-
-    // 현재 Fat table의 번호
-    int curEntryNo = DATA_START_BLOCK;
+    // 현재 Fat table의 번호와 탐색중인 번호
+    int curEntryNo = DATA_START_BLOCK, searchEntryNo = curEntryNo;
 
     // 현재 보고 있는 디렉토리 엔트리
     DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
     BufRead(DATA_START_BLOCK, (char *)dirents);
 
-    // 쪼갠 경로를 순차적으로 탐색 후 폴더 생성
+    // 현재 탐색중인 폴더 접근 모드
+    AccessMode curDirMode = dirents[0].mode;
+
+    // 인자로 받은 경로를 쪼갠 뒤 순차적으로 탐색 후 폴더 생성
+    char fullPath[BLOCK_SIZE];
+    strcpy(fullPath, szDirName);
     char *curDirName = strtok(fullPath, "/");
     char *nextDirName = strtok(NULL, "/");
     while (curDirName != NULL)
@@ -74,8 +75,9 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 // 그 폴더로 들어가야 한다면 들어가기
                 else
                 {
-                    curEntryNo = dirents[i].startBlockNum;
+                    searchEntryNo = curEntryNo = dirents[i].startBlockNum;
                     BufRead(curEntryNo, (char *)dirents);
+                    curDirMode = dirents[0].mode;
                     break;
                 }
             }
@@ -92,7 +94,7 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 dirents[i].startBlockNum = newEntryNo;
                 dirents[i].filetype = FILE_TYPE_DIR;
                 dirents[i].numBlocks = 1;
-                BufWrite(curEntryNo, (char *)dirents);
+                BufWrite(searchEntryNo, (char *)dirents);
 
                 // 새로 만드는 디렉토리 엔트리 작성
                 memset(dirents, 0, BLOCK_SIZE);
@@ -103,19 +105,27 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 dirents[0].numBlocks = 1;
                 BufWrite(newEntryNo, (char *)dirents);
 
+                // 상위 디렉토리 작성
+                strcpy(dirents[1].name, "..");
+                dirents[1].mode = curDirMode;
+                dirents[1].startBlockNum = curEntryNo;
+                dirents[1].filetype = FILE_TYPE_DIR;
+                dirents[1].numBlocks = 1;
+                BufWrite(newEntryNo, (char *)dirents);
+
                 // 파일 시스템 정보 업데이트
                 fsi->blocks++;
                 fsi->numAllocBlocks++;
                 fsi->numFreeBlocks--;
                 fsi->numAllocFiles++;
                 BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                BufSync();
+                BufSyncBlock(FILEINFO_START_BLOCK);
 
                 if (nextDirName == NULL)
                     return 0;
                 else
                 {
-                    BufRead(curEntryNo, (char *)dirents);
+                    BufRead(searchEntryNo, (char *)dirents);
                     i--;
                 }
             }
@@ -124,12 +134,12 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
             if (i == NUM_OF_DIRENT_PER_BLK - 1)
             {
                 // 다음 폴더 연결된 것이 없을 경우 새로 만들고 연결시키기!
-                int nextEntryNo = GetNextEntryNo(curEntryNo);
+                int nextEntryNo = GetNextEntryNo(searchEntryNo);
                 if (nextEntryNo == -1)
                 {
                     int conDirFatEntryNo = FatGetFreeEntryNum();
-                    FatAdd(curEntryNo, conDirFatEntryNo);
-                    curEntryNo = conDirFatEntryNo;
+                    FatAdd(searchEntryNo, conDirFatEntryNo);
+                    searchEntryNo = conDirFatEntryNo;
                     memset(dirents, 0, BLOCK_SIZE);
 
                     // 파일 시스템 정보 업데이트
@@ -137,11 +147,11 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                     fsi->numAllocBlocks++;
                     fsi->numFreeBlocks--;
                     BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
-                    BufSync();
+                    BufSyncBlock(FILEINFO_START_BLOCK);
                 }
                 // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
                 else
-                    BufRead(curEntryNo = nextEntryNo, (char *)dirents);
+                    BufRead(searchEntryNo = nextEntryNo, (char *)dirents);
                 i = -1; // 처음부터 4개 다시 탐색
             }
         }
@@ -199,10 +209,89 @@ void Unmount(void)
 
 Directory *OpenDirectory(char *szDirName)
 {
+    // 현재 Fat table의 번호
+    int curEntryNo = DATA_START_BLOCK;
+
+    // 현재 보고 있는 디렉토리 엔트리
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(DATA_START_BLOCK, (char *)dirents);
+
+    // 인자로 받은 경로를 쪼갠 뒤 순차적으로 탐색
+    char fullPath[BLOCK_SIZE];
+    strcpy(fullPath, szDirName);
+    char *curDirName = strtok(fullPath, "/");
+    char *nextDirName = strtok(NULL, "/");
+    while (curDirName != NULL)
+    {
+        for (int i = 0;; i++)
+        {
+            // 폴더를 찾았을 경우
+            if (strcmp(curDirName, dirents[i].name) == 0)
+            {
+                curEntryNo = dirents[i].startBlockNum;
+                BufRead(curEntryNo, (char *)dirents);
+
+                // 마지막 폴더이면
+                if (nextDirName == NULL)
+                {
+                    Directory *dir = (Directory *)malloc(sizeof(Directory));
+                    dir->dirBlkNum = dirents[0].startBlockNum;
+                    dir->entryIndex = strcmp(dirents[1].name, "..") == 0 ? 2 : 1;
+                    return dir;
+                }
+                break;
+            }
+            // 현재 서칭 폴더 명이 없을 경우 존재하지 않는 폴더이므로 실패
+            else if (strlen(dirents[i].name) == 0)
+                return NULL;
+
+            // 마지막 엔트리까지 봤을 경우 현재 폴더 다음 블럭 서칭 (다음 블럭이 있을 경우만)
+            if (i == NUM_OF_DIRENT_PER_BLK - 1)
+            {
+                // 다음 폴더 연결된 것이 없을 경우 새로 만들고 연결시키기!
+                int nextEntryNo = GetNextEntryNo(curEntryNo);
+                if (nextEntryNo == -1)
+                    return NULL;
+                // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
+                else
+                    BufRead(curEntryNo = nextEntryNo, (char *)dirents);
+                i = -1; // 처음부터 4개 다시 탐색
+            }
+        }
+        curDirName = nextDirName;
+        nextDirName = strtok(NULL, "/");
+    }
 }
 
 FileInfo *ReadDirectory(Directory *pDir)
 {
+    if (pDir->dirBlkNum <= 0)
+        return NULL;
+
+    // 인자에 대한 블럭 읽기
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(pDir->dirBlkNum, (char *)dirents);
+
+    // 읽을 곳이 뭐가 없을 경우 리턴
+    if (strlen(dirents[pDir->entryIndex].name) == 0)
+        return NULL;
+
+    // 리턴할 파일 정보 만들기
+    FileInfo *fi = (FileInfo *)malloc(sizeof(FileInfo));
+    strcpy(fi->name, dirents[pDir->entryIndex].name);
+    fi->mode = dirents[pDir->entryIndex].mode;
+    fi->startFatEntry = dirents[pDir->entryIndex].startBlockNum;
+    fi->filetype = dirents[pDir->entryIndex].filetype;
+    fi->numBlocks = dirents[pDir->entryIndex].numBlocks;
+
+    // pDir 인덱스 업데이트 하는데 다음 블록 가르켜야하면 가르킴
+    if (++(pDir->entryIndex) >= NUM_OF_DIRENT_PER_BLK)
+    {
+        pDir->dirBlkNum = GetNextEntryNo(pDir->dirBlkNum);
+        pDir->entryIndex = 0;
+    }
+
+    return fi;
 }
 
 int CloseDirectory(Directory *pDir)
