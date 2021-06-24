@@ -217,6 +217,97 @@ int CloseFile(int fileDesc)
 
 int RemoveFile(const char *szFileName)
 {
+    int searchEntryNo = DATA_START_BLOCK;          // 현재 Fat table의 번호
+    int curEntryNo = searchEntryNo;                // 현재 디렉토리 시작 엔트리 위치
+    int removeEntryNo = -1, removeEntryIndex = -1; // 제거될 엔트리의 위치
+
+    // 현재 보고 있는 디렉토리 엔트리
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(DATA_START_BLOCK, (char *)dirents);
+
+    // 인자로 받은 경로를 쪼갠 뒤 순차적으로 탐색
+    char fullPath[BLOCK_SIZE];
+    strcpy(fullPath, szFileName);
+    char *curName = strtok(fullPath, "/");
+    char *nextName = strtok(NULL, "/");
+    while (curName != NULL)
+    {
+        for (int i = 0;; i++)
+        {
+            // 마지막 파일 찾는중일 경우
+            if (nextName == NULL)
+            {
+                // 삭제할 파일 찾았으면 삭제할거라고 removeEntryNo에 저장
+                if (strcmp(curName, dirents[i].name) == 0 && dirents[i].filetype == FILE_TYPE_FILE)
+                {
+                    removeEntryNo = searchEntryNo;
+                    removeEntryIndex = i;
+                }
+
+                // 끝까지 왔을 때 삭제할게 지정되어 있으면 제거 처리
+                int isLast;
+                if (i == NUM_OF_DIRENT_PER_BLK - 1)
+                    isLast = GetNextEntryNo(searchEntryNo) == -1;
+                else
+                    isLast = strlen(dirents[i + 1].name) == 0;
+                if (isLast && removeEntryNo != -1)
+                {
+                    // 엔트리가 하나만 있는 블럭이면 제거하여 공간 절약
+                    if (i == 0)
+                    {
+                        FatRemove(removeEntryNo, searchEntryNo);
+                        pFileSysInfo->numAllocBlocks--;
+                        pFileSysInfo->numFreeBlocks++;
+                    }
+                    // 파일 Fat table 에서 제거
+                    FatRemove(dirents[i].startBlockNum, dirents[i].startBlockNum);
+
+                    // 마지막 엔트리 백업 후 없애기
+                    DirEntry de;
+                    memcpy(&de, dirents + i, sizeof(DirEntry));
+                    memset(dirents + i, 0, sizeof(DirEntry));
+                    BufWrite(searchEntryNo, (char *)dirents);
+
+                    // 마지막 엔트리를 제거된 위치로 옮기기
+                    BufRead(removeEntryNo, (char *)dirents);
+                    memcpy(dirents + removeEntryIndex, &de, sizeof(DirEntry));
+                    BufWrite(removeEntryNo, (char *)dirents);
+
+                    break;
+                }
+            }
+            // 중간 폴더 탐색 중일 경우
+            else
+            {
+                // 들어갈 폴더 또는 열 파일을 찾았을 경우
+                if (strcmp(curName, dirents[i].name) == 0 && dirents[i].filetype == FILE_TYPE_DIR)
+                {
+                    searchEntryNo = curEntryNo = dirents[i].startBlockNum;
+                    BufRead(searchEntryNo, (char *)dirents);
+                    break;
+                }
+
+                // 끝까지 봤는데 없을 경우 실패
+                if (strlen(dirents[i].name) == 0)
+                    return -1;
+            }
+
+            // 마지막 엔트리까지 봤을 경우 현재 폴더 다음 블럭 서칭 (다음 블럭이 있을 경우만)
+            if (i == NUM_OF_DIRENT_PER_BLK - 1)
+            {
+                // 다음 폴더 연결된 것이 없을 경우 새로 만들고 연결시키기!
+                int nextEntryNo = GetNextEntryNo(searchEntryNo);
+                if (nextEntryNo == -1)
+                    return -1;
+                // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
+                else
+                    BufRead(searchEntryNo = nextEntryNo, (char *)dirents);
+                i = -1; // 처음부터 4개 다시 탐색
+            }
+        }
+        curName = nextName;
+        nextName = strtok(NULL, "/");
+    }
 }
 
 int MakeDirectory(const char *szDirName, AccessMode mode)

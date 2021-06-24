@@ -183,6 +183,7 @@ void TestCase4(void)
 		}
 	}
 	printf(" ---- Test Case 4: files of even number removed ----\n");
+	ListDirContents("/home/u7");
 
 	for (i = 0; i < 9; i++)
 	{
@@ -249,6 +250,13 @@ int main(int argc, char **argv)
 	DevResetDiskAccessCount();
 	Mount();
 	TestCase3();
+	Unmount();
+	PrintFileSysInfo();
+	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
+
+	DevResetDiskAccessCount();
+	Mount();
+	TestCase4();
 	Unmount();
 	PrintFileSysInfo();
 	printf("the number of disk access counts is %d\n", DevGetDiskReadCount() + DevGetDiskWriteCount());
