@@ -5,15 +5,144 @@
 #include "fat.h"
 #include "fs.h"
 
+FileTable *pFileTable = NULL;
 FileDescTable *pFileDescTable = NULL;
 
 void FileSysInit(void)
 {
     BufInit();
+    pFileTable = (FileTable *)calloc(sizeof(FileTable), 1);
+    pFileDescTable = (FileDescTable *)calloc(sizeof(FileDescTable), 1);
+}
+
+/* 파일이 많은 폴더일 경우 여러 블록을 사용했을 테니 다음 블록 번호가 뭔지 FAT Table에서 다음 넘버를 가져옴
+   -1이 리턴된 경우 다음 블록 없는 것임 */
+int GetNextEntryNo(int fatEntryNo)
+{
+    const int ENTRY_NUM = BLOCK_SIZE / sizeof(int);
+    int block[ENTRY_NUM];
+    BufRead(FAT_START_BLOCK + fatEntryNo / ENTRY_NUM, (char *)block);
+    return block[fatEntryNo % ENTRY_NUM];
+}
+// 파일을 테이블에 추가하고 디스크립터 번호 반환
+int AddFileToTable(File file)
+{
+    for (int i = 0; i < MAX_FILE_NUM; i++)
+    {
+        if (pFileTable->pFile[i].bUsed)
+            continue;
+
+        pFileTable->pFile[i].bUsed = 1;
+        pFileTable->pFile[i].flag = file.flag;
+        pFileTable->pFile[i].dirBlkNum = file.dirBlkNum;
+        pFileTable->pFile[i].entryIndex = file.entryIndex;
+        pFileTable->pFile[i].fileOffset = file.fileOffset;
+        pFileTable->numUsedFile++;
+
+        pFileDescTable->pEntry[i].bUsed = 1;
+        pFileDescTable->pEntry[i].fileTableIndex = i;
+        pFileDescTable->numUsedDescEntry++;
+        return i;
+    }
 }
 
 int OpenFile(const char *szFileName, OpenFlag flag, AccessMode mode)
 {
+    // 파일 시스템 정보 읽기
+    FileSysInfo *fsi = malloc(BLOCK_SIZE);
+    BufRead(FILEINFO_START_BLOCK, (char *)fsi);
+
+    // 현재 Fat table의 번호
+    int searchEntryNo = DATA_START_BLOCK;
+
+    // 현재 보고 있는 디렉토리 엔트리
+    DirEntry dirents[NUM_OF_DIRENT_PER_BLK];
+    BufRead(DATA_START_BLOCK, (char *)dirents);
+
+    // 인자로 받은 경로를 쪼갠 뒤 순차적으로 탐색
+    char fullPath[BLOCK_SIZE];
+    strcpy(fullPath, szFileName);
+    char *curName = strtok(fullPath, "/");
+    char *nextName = strtok(NULL, "/");
+    while (curName != NULL)
+    {
+        for (int i = 0;; i++)
+        {
+            // 들어갈 폴더 또는 열 파일을 찾았을 경우
+            if (strcmp(curName, dirents[i].name) == 0)
+            {
+                // 마지막 파일 이름이고 타입이 파일이면 그냥 열기
+                if (nextName == NULL)
+                {
+                    if (dirents[i].filetype == FILE_TYPE_FILE)
+                    {
+                        // TODO 존재하는 파일 열기
+                        // File file = NULL;
+                        // return AddFileToTable(file);
+                    }
+                }
+                else if (dirents[i].filetype == FILE_TYPE_DIR)
+                {
+                    searchEntryNo = dirents[i].startBlockNum;
+                    BufRead(searchEntryNo, (char *)dirents);
+                }
+                break;
+            }
+            // 현재 서칭 파일명이 없을 경우 만들기
+            else if (strlen(dirents[i].name) == 0)
+            {
+                // 마지막 경로 즉, 파일일 경우 진행
+                if (nextName == NULL)
+                {
+                    // 현재 디렉토리 엔트리에 새 파일 정보 작성
+                    strcpy(dirents[i].name, curName);
+                    dirents[i].mode = mode;
+                    dirents[i].startBlockNum = -1;
+                    dirents[i].filetype = FILE_TYPE_FILE;
+                    dirents[i].numBlocks = 0;
+                    BufWrite(searchEntryNo, (char *)dirents);
+
+                    File file = {
+                        bUsed : 1,
+                        flag : flag,
+                        dirBlkNum : searchEntryNo,
+                        entryIndex : i,
+                        fileOffset : 0
+                    };
+
+                    return AddFileToTable(file);
+                }
+                else
+                    return -1;
+            }
+
+            // 마지막 엔트리까지 봤을 경우 현재 폴더 다음 블럭 서칭 (다음 블럭이 있을 경우만)
+            if (i == NUM_OF_DIRENT_PER_BLK - 1)
+            {
+                // 다음 폴더 연결된 것이 없을 경우 새로 만들고 연결시키기!
+                int nextEntryNo = GetNextEntryNo(searchEntryNo);
+                if (nextEntryNo == -1)
+                {
+                    int conDirFatEntryNo = FatGetFreeEntryNum();
+                    FatAdd(searchEntryNo, conDirFatEntryNo);
+                    searchEntryNo = conDirFatEntryNo;
+                    memset(dirents, 0, BLOCK_SIZE);
+
+                    // 파일 시스템 정보 업데이트
+                    fsi->numAllocBlocks++;
+                    fsi->numFreeBlocks--;
+                    BufWrite(FILEINFO_START_BLOCK, (char *)fsi);
+                    BufSyncBlock(FILEINFO_START_BLOCK);
+                }
+                // 다음 폴더 연결되어 있으면 그거 읽어서 쓰기
+                else
+                    BufRead(searchEntryNo = nextEntryNo, (char *)dirents);
+                i = -1; // 처음부터 4개 다시 탐색
+            }
+        }
+        curName = nextName;
+        nextName = strtok(NULL, "/");
+    }
 }
 
 int WriteFile(int fileDesc, char *pBuffer, int length)
@@ -26,21 +155,17 @@ int ReadFile(int fileDesc, char *pBuffer, int length)
 
 int CloseFile(int fileDesc)
 {
+    memset(pFileTable->pFile + fileDesc, 0, sizeof(File));
+    memset(pFileDescTable->pEntry + fileDesc, 0, sizeof(DescEntry));
+
+    pFileTable->numUsedFile--;
+    pFileDescTable->numUsedDescEntry--;
 }
 
 int RemoveFile(const char *szFileName)
 {
 }
 
-/* 파일이 많은 폴더일 경우 여러 블록을 사용했을 테니 다음 블록 번호가 뭔지 FAT Table에서 다음 넘버를 가져옴
-   -1이 리턴된 경우 다음 블록 없는 것임 */
-int GetNextEntryNo(int fatEntryNo)
-{
-    const int ENTRY_NUM = BLOCK_SIZE / sizeof(int);
-    int block[ENTRY_NUM];
-    BufRead(FAT_START_BLOCK + fatEntryNo / ENTRY_NUM, (char *)block);
-    return block[fatEntryNo % ENTRY_NUM];
-}
 int MakeDirectory(const char *szDirName, AccessMode mode)
 {
     // 파일 시스템 정보 읽기
@@ -67,7 +192,8 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
         for (int i = 0;; i++)
         {
             // 폴더가 이미 있을 경우
-            if (strcmp(curDirName, dirents[i].name) == 0)
+            if (strcmp(curDirName, dirents[i].name) == 0 &&
+                dirents[i].filetype == FILE_TYPE_DIR)
             {
                 // 만들어야 하는데 이미 있는 경우 함수 종료
                 if (nextDirName == NULL)
@@ -103,7 +229,6 @@ int MakeDirectory(const char *szDirName, AccessMode mode)
                 dirents[0].startBlockNum = newEntryNo;
                 dirents[0].filetype = FILE_TYPE_DIR;
                 dirents[0].numBlocks = 1;
-                BufWrite(newEntryNo, (char *)dirents);
 
                 // 상위 디렉토리 작성
                 strcpy(dirents[1].name, "..");
@@ -262,14 +387,14 @@ void Format(void)
         rootFatEntryNum : DATA_START_BLOCK,
         diskCapacity : FS_DISK_CAPACITY,
         numAllocBlocks : 1,
-        numFreeBlocks : MAX_FILE_NUM - 1,
+        numFreeBlocks : FS_DISK_CAPACITY / BLOCK_SIZE - DATA_START_BLOCK,
         numAllocFiles : 1,
         fatTableStart : FAT_START_BLOCK,
         dataStart : DATA_START_BLOCK
     };
     memcpy(fsiBuf, &fsi, sizeof(FileSysInfo)); // 메모리에 할당된 블럭에 파일 시스템 정보 넣기
     BufWrite(FILEINFO_START_BLOCK, fsiBuf);    // 그 블럭을 디스크에 작성
-    // BufSync();
+                                               // BufSync();
 }
 
 void Mount(void)
@@ -279,6 +404,8 @@ void Mount(void)
 void Unmount(void)
 {
     BufSync();
+    free(pFileTable);
+    free(pFileDescTable);
 }
 
 Directory *OpenDirectory(char *szDirName)
@@ -300,7 +427,7 @@ Directory *OpenDirectory(char *szDirName)
         for (int i = 0;; i++)
         {
             // 폴더를 찾았을 경우
-            if (strcmp(curDirName, dirents[i].name) == 0)
+            if (strcmp(curDirName, dirents[i].name) == 0 && dirents[i].filetype == FILE_TYPE_DIR)
             {
                 searchEntryNo = dirents[i].startBlockNum;
                 BufRead(searchEntryNo, (char *)dirents);
@@ -370,4 +497,6 @@ FileInfo *ReadDirectory(Directory *pDir)
 
 int CloseDirectory(Directory *pDir)
 {
+    free(pDir);
+    return 0;
 }
