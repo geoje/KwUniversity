@@ -7,6 +7,8 @@
 extern void DevCreateDisk(void);
 
 extern void DevOpenDisk(void);
+
+extern void DevCloseDisk(void);
     
 extern void DevReadBlock(int blkno, char* pBuf);
 

@@ -9,31 +9,34 @@
 #include "fat.h"
 #include "buf.h"
 
-#define DIR_NUM_MAX 100
+#define DIR_NUM_MAX		100
 
-#define BLK_SIZE (128)
+#define BLK_SIZE		(128)
 
-FileSysInfo *pFileSysInfo;
+FileSysInfo		*pFileSysInfo;
+
+
 
 void PrintFileSysInfo(void)
 {
-	void *pBuf = NULL;
+	void* pBuf = NULL;
 
 	pBuf = malloc(BLK_SIZE);
 	BufRead(0, pBuf);
-	pFileSysInfo = (FileSysInfo *)pBuf;
-	printf("File system info: # of allocated files:%d, # of allocated blocks:%d, #of free blocks:%d\n",
-		   pFileSysInfo->numAllocFiles, pFileSysInfo->numAllocBlocks, pFileSysInfo->numFreeBlocks);
+	pFileSysInfo = (FileSysInfo*)pBuf;
+	printf("File system info: # of allocated files:%d, # of allocated blocks:%d, #of free blocks:%d\n", 
+		pFileSysInfo->numAllocFiles, pFileSysInfo->numAllocBlocks, pFileSysInfo->numFreeBlocks);
 	printf("FAT info: # of free entries in FAT:%d\n", FatGetFreeEntryNum());
 	printf("\n");
 }
 
-void ListDirContents(char *dirName)
+
+void ListDirContents(char* dirName)
 {
-	int i;
+	int i ;
 	int count;
-	FileInfo *pFileInfo;
-	Directory *pDir;
+	FileInfo* pFileInfo;
+	Directory* pDir;
 
 	//DirEntry pDirEntry[DIR_NUM_MAX];
 
@@ -41,20 +44,21 @@ void ListDirContents(char *dirName)
 
 	printf("[%s]Sub-directory:\n", dirName);
 	pDir = OpenDirectory(dirName);
-	while ((pFileInfo = ReadDirectory(pDir)) != NULL)
+	while((pFileInfo = ReadDirectory(pDir)) != NULL)
 	{
-		if (pFileInfo->filetype == FILE_TYPE_FILE)
-		{
+		if (pFileInfo->filetype == FILE_TYPE_FILE){
 			printf("\t name:%s, start block:%d, type:file, blocks:%d\n", pFileInfo->name, pFileInfo->startFatEntry, pFileInfo->numBlocks);
 		}
 		else if (pFileInfo->filetype == FILE_TYPE_DIR)
-			printf("\t name:%s, start block:%d, type:directory, blocks:%d\n", pFileInfo->name, pFileInfo->startFatEntry, pFileInfo->numBlocks);
+				printf("\t name:%s, start block:%d, type:directory, blocks:%d\n", pFileInfo->name, pFileInfo->startFatEntry, pFileInfo->numBlocks);
 		else
 		{
 			assert(0);
 		}
 	}
 }
+
+
 
 void TestCase1(void)
 {
@@ -68,14 +72,14 @@ void TestCase1(void)
 	MakeDirectory("/etc", ACCESS_MODE_READWRITE);
 	MakeDirectory("/home", ACCESS_MODE_READWRITE);
 	/* make home directory */
-	for (i = 0; i < 8; i++)
+	for (i = 0;i < 8;i++)
 	{
 		memset(dirName, 0, NAME_LEN);
 		sprintf(dirName, "/home/u%d", i);
 		MakeDirectory(dirName, ACCESS_MODE_READWRITE);
 	}
 	/* make etc directory */
-	for (i = 0; i < 24; i++)
+	for (i = 0;i < 24;i++)
 	{
 		memset(dirName, 0, NAME_LEN);
 		sprintf(dirName, "/etc/dev%d", i);
@@ -85,7 +89,7 @@ void TestCase1(void)
 	ListDirContents("/etc");
 
 	/* remove subdirectory of etc directory */
-	for (i = 23; i >= 0; i--)
+	for (i = 23;i >= 0;i--)
 	{
 		memset(dirName, 0, NAME_LEN);
 		sprintf(dirName, "/etc/dev%d", i);
@@ -93,6 +97,7 @@ void TestCase1(void)
 	}
 	ListDirContents("/etc");
 }
+
 
 void TestCase2(void)
 {
@@ -105,24 +110,25 @@ void TestCase2(void)
 
 	ListDirContents("/home");
 	/* make home directory */
-	for (i = 0; i < 8; i++)
+	for (i = 0;i < 8;i++)
 	{
-		for (j = 0; j < 9; j++)
+		for (j = 0;j < 9;j++)
 		{
 			memset(fileName, 0, NAME_LEN);
-			sprintf(fileName, "/home/u%d/f%d", i, j);
+			sprintf(fileName, "/home/u%d/f%d", i,j);
 			fd = OpenFile(fileName, OPEN_FLAG_READWRITE, ACCESS_MODE_READWRITE);
 			CloseFile(fd);
 		}
 	}
 
-	for (i = 0; i < 8; i++)
+	for (i = 0;i < 8;i++)
 	{
 		memset(dirName, 0, NAME_LEN);
 		sprintf(dirName, "/home/u%d", i);
 		ListDirContents(dirName);
 	}
 }
+
 
 void TestCase3(void)
 {
@@ -133,7 +139,7 @@ void TestCase3(void)
 	char pBuffer2[BLK_SIZE];
 
 	printf(" ---- Test Case 3 ----\n");
-	for (i = 0; i < 9; i++)
+	for (i = 0;i < 9;i++)
 	{
 		memset(fileName, 0, NAME_LEN);
 		sprintf(fileName, "/home/u7/f%d", i);
@@ -143,7 +149,7 @@ void TestCase3(void)
 		WriteFile(fd, pBuffer1, BLK_SIZE);
 		CloseFile(fd);
 	}
-	for (i = 0; i < 9; i++)
+	for (i = 0;i < 9;i++)
 	{
 		memset(fileName, 0, NAME_LEN);
 		sprintf(fileName, "/home/u7/f%d", i);
@@ -166,17 +172,18 @@ void TestCase3(void)
 	ListDirContents("/home/u7");
 }
 
+
 void TestCase4(void)
 {
 	int i;
 	int fd;
 	char fileName[NAME_LEN];
-	char pBuffer[BLK_SIZE * 2];
+	char pBuffer[BLK_SIZE*2];
 
 	printf(" ---- Test Case 4 ----\n");
-	for (i = 0; i < 9; i++)
+	for (i = 0;i < 9;i++)
 	{
-		if (i % 2 == 0)
+		if (i%2 == 0)
 		{
 			memset(fileName, 0, NAME_LEN);
 			sprintf(fileName, "/home/u7/f%d", i);
@@ -185,15 +192,15 @@ void TestCase4(void)
 	}
 	printf(" ---- Test Case 4: files of even number removed ----\n");
 
-	for (i = 0; i < 9; i++)
+	for (i = 0;i < 9;i++)
 	{
-		if (i % 2)
+		if (i%2)
 		{
 			memset(fileName, 0, NAME_LEN);
 			sprintf(fileName, "/home/u7/f%d", i);
 			fd = OpenFile(fileName, OPEN_FLAG_READWRITE, ACCESS_MODE_READWRITE);
 
-			memset(pBuffer, 0, BLK_SIZE * 2);
+			memset(pBuffer, 0, BLK_SIZE*2);
 			strcpy(pBuffer, fileName);
 			WriteFile(fd, pBuffer, BLK_SIZE + 1);
 			CloseFile(fd);
@@ -203,15 +210,15 @@ void TestCase4(void)
 	printf(" ---- Test Case 4: files of odd number overwritten ----\n");
 	ListDirContents("/home/u7");
 
-	for (i = 0; i < 9; i++)
+	for (i = 0;i < 9;i++)
 	{
-		if (i % 2 == 0)
+		if (i%2 == 0)
 		{
 			memset(fileName, 0, NAME_LEN);
 			sprintf(fileName, "/home/u7/f%d", i);
 			fd = OpenFile(fileName, OPEN_FLAG_READWRITE, ACCESS_MODE_READWRITE);
 
-			memset(pBuffer, 0, BLK_SIZE * 2);
+			memset(pBuffer, 0, BLK_SIZE*2);
 			strcpy(pBuffer, fileName);
 			WriteFile(fd, pBuffer, BLK_SIZE + 1);
 			WriteFile(fd, pBuffer, BLK_SIZE + 1);
@@ -229,13 +236,13 @@ void TestCase5(void)
 	ListDirContents("/home/u7");
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	int TcNum;
 
 	if (argc < 3)
 	{
-	ERROR:
+ERROR:
 		printf("usage: a.out [format | readwrite] [1-5])\n");
 		return -1;
 	}
@@ -249,29 +256,29 @@ int main(int argc, char **argv)
 
 	TcNum = atoi(argv[2]);
 
-	DevResetDiskAccessCount();
+	DevResetDiskAccessCount();	
 
 	switch (TcNum)
 	{
 	case 1:
 		TestCase1();
-		PrintFileSysInfo();
+		PrintFileSysInfo(); 
 		break;
 	case 2:
 		TestCase2();
-		PrintFileSysInfo();
+		PrintFileSysInfo(); 
 		break;
 	case 3:
 		TestCase3();
-		PrintFileSysInfo();
+		PrintFileSysInfo(); 
 		break;
 	case 4:
 		TestCase4();
-		PrintFileSysInfo();
+		PrintFileSysInfo(); 
 		break;
 	case 5:
 		TestCase5();
-		PrintFileSysInfo();
+		PrintFileSysInfo(); 
 		break;
 	default:
 		Unmount();
@@ -283,3 +290,5 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
+

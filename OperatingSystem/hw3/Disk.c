@@ -37,6 +37,10 @@ void DevOpenDisk(void)
 	fd = open("MY_DISK", O_RDWR);
 }
 
+ void DevCloseDisk(void) {
+          close(fd);
+ }
+
 void __DevMoveBlock(int blkno){
     lseek(fd, (off_t)+(BLOCK_SIZE*blkno),SEEK_SET);
 }
