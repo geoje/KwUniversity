@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" AnchorPane.topAnchor="20.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <Label id="lblName" text="이름">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="txtName" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutY="50.0" prefHeight="30.0" prefWidth="200.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <Label id="lblKorean" text="국어">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="txtKorean" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutY="80.0" prefHeight="30.0" prefWidth="200.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <Label id="lblMath" text="수학">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="txtMath" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutY="110.0" prefHeight="30.0" prefWidth="200.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <Label id="lblEnglish" text="영어">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Label>
+            <TextField id="txtEnglish" prefWidth="100.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutY="140.0" prefHeight="60.0" prefWidth="200.0">
+         <children>
+            <Button id="btnSave" mnemonicParsing="false" text="저장" />
+            <Button id="btnCancel" mnemonicParsing="false" text="취소">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

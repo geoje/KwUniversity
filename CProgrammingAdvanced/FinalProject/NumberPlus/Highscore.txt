@@ -1,0 +1,4 @@
+Easy=101
+Normal=59
+Hard=36
+Hell=34

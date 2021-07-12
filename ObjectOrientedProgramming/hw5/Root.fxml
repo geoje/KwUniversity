@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.RootController">
+   <children>
+      <TableView fx:id="tvScore" prefHeight="240.0" prefWidth="400.0">
+        <columns>
+          <TableColumn fx:id="tcName" prefWidth="97.0" text="이름" />
+          <TableColumn fx:id="tcKorean" prefWidth="96.0" text="국어" />
+            <TableColumn fx:id="tcMath" prefWidth="96.0" text="수학" />
+            <TableColumn fx:id="tcEnglish" prefWidth="96.0" text="영어" />
+        </columns>
+      </TableView>
+      <HBox alignment="CENTER" layoutY="240.0" prefHeight="60.0" prefWidth="400.0">
+         <children>
+            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAddOnAction" text="추가">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button id="btnChart" mnemonicParsing="false" onAction="#btnChartOnAction" text="학생별 막대그래프" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
