@@ -65,7 +65,7 @@ curl https://raw.githubusercontent.com/geoje/KwUniversity/master/LinuxApplicatio
 ![](LinuxApplicationPractice/Project2/FileExplorer.gif)
 <br><br><br><br>
 
-# 📊 ScoreChart [다운로드](https://github.com/geoje/KwUniversity/raw/master/ObjectOrientedProgramming\hw5\ScoreChart.exe)
+# 📊 ScoreChart [다운로드](https://github.com/geoje/KwUniversity/raw/master/ObjectOrientedProgramming/hw5/ScoreChart.exe)
 
 #### 2학년 2학기 객체지향프로그래밍 (2018-11-29 ~ 2018-12-14)
 
@@ -78,29 +78,42 @@ curl https://raw.githubusercontent.com/geoje/KwUniversity/master/LinuxApplicatio
 
 #### 2학년 2학기 시스템소프트웨어실습 (2018-10-19 ~ 2018-12-16)
 
-`C` 언어로 `ncurses` 라는 `CLI` 환경 라이브러리를 사용하여 만든 **오델로** 라는 보드게임을 **멀티로 플레이**할 수 있는 프로그램입니다.
+`C` 언어로 `ncurses` 라는 `CLI` 환경 라이브러리를 사용하여 만든 **오델로** 라는 보드게임을 **원격으로 플레이**할 수 있는 프로그램입니다.
 <br>
 
 #### 서버 실행 스크립트
-
 ```bash
 wget https://github.com/geoje/KwUniversity/raw/master/SystemSoftwarePractice/Project2/Server/server.out && \
 chmod u+x server.out && \
 ./server.out 12132
 ```
-
 <br>
 
 #### 클라이언트 실행 스크립트
-
 ```bash
 wget https://github.com/geoje/KwUniversity/raw/master/SystemSoftwarePractice/Project2/Client/client.out && \
 chmod u+x client.out && \
 export TERM=xterm-color && \
 ./client.out 127.0.0.1 12132
 ```
-
 <br>
 
 ![](SystemSoftwarePractice/Project2/Othello.gif)
+<br><br><br><br>
+
+# 🤔 CatchMind [서버](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Server/CatchMind_Server.zip) / [클라이언트](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Client/CatchMind_Client.zip)
+
+#### 3학년 1학기 응용소프트웨어실습 (2021-05-14 ~ 2021-06-11)
+`C#` 언어로 소켓, 패킷 통신을 통해 구현된 원격으로 플레이할 수 있는 **캐치마인드** 프로그램 입니다.
+
+![](ApplicationSoftwarePractice\CatchMind_Client\CatchMind.gif)
+<br><br><br><br>
+
+# 💬 OST [서버](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Server/CatchMind_Server.zip) / [클라이언트](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Client/CatchMind_Client.zip)
+#### 🏢 Office messenger Supporting Telecommuting
+#### 3학년 1학기 응용소프트웨어실습 (2021-03-12 ~ 2021-06-11)
+카카오톡을 모티브로 `C#` 과 `MySQL` 등을 사용해 만든 **사내 채팅 프로그램** 팀프로젝트 입니다.
+<br>
+
+![]()
 <br><br><br><br>
