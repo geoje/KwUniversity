@@ -106,14 +106,14 @@ export TERM=xterm-color && \
 #### 3학년 1학기 응용소프트웨어실습 (2021-05-14 ~ 2021-06-11)
 `C#` 언어로 소켓, 패킷 통신을 통해 구현된 원격으로 플레이할 수 있는 **캐치마인드** 프로그램 입니다.
 
-![](ApplicationSoftwarePractice\CatchMind_Client\CatchMind.gif)
+![](ApplicationSoftwarePractice/CatchMind_Client/CatchMind.gif)
 <br><br><br><br>
 
-# 💬 OST [서버](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Server/CatchMind_Server.zip) / [클라이언트](https://github.com/geoje/KwUniversity/raw/master/ApplicationSoftwarePractice/CatchMind_Client/CatchMind_Client.zip)
+# 💬 OST [더보기](https://github.com/KwDrama/OST)
 #### 🏢 Office messenger Supporting Telecommuting
 #### 3학년 1학기 응용소프트웨어실습 (2021-03-12 ~ 2021-06-11)
 카카오톡을 모티브로 `C#` 과 `MySQL` 등을 사용해 만든 **사내 채팅 프로그램** 팀프로젝트 입니다.
 <br>
 
-![]()
+![](https://raw.githubusercontent.com/KwDrama/OST/develop/Document/OfficeChat.gif)
 <br><br><br><br>
