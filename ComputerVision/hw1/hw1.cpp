@@ -81,7 +81,7 @@ Mat Rotation_8UC1(Mat input, double degree) {
 	cvtColor(input, input, cv::COLOR_RGB2GRAY);
 
 	// 출력 이미지 초기화
-	Mat output(input.cols, input.rows, CV_8UC1);
+	Mat output(input.rows, input.cols, CV_8UC1);
 
 	// 계산 - 목적지에서 반대로 회전시켜 갓을 가져오도록
 	for (int i = 0; i < output.rows; i++)
