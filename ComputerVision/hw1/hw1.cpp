@@ -81,7 +81,7 @@ Mat Rotation_8UC1(Mat input, double degree) {
 	cvtColor(input, input, cv::COLOR_RGB2GRAY);
 
 	// 출력 이미지 초기화
-	Mat output(input.rows, input.cols, CV_8UC1);
+	Mat output(input.cols, input.rows, CV_8UC1);
 
 	// 계산 - 목적지에서 반대로 회전시켜 갓을 가져오도록
 	for (int i = 0; i < output.rows; i++)
@@ -89,9 +89,9 @@ Mat Rotation_8UC1(Mat input, double degree) {
 			int ii = (int)(cenY + ((double)i - cenY) * cc - ((double)j - cenX) * ss);
 			int jj = (int)(cenX + ((double)i - cenY) * ss + ((double)j - cenX) * cc);
 			if (ii >= 0 && jj >= 0 && ii < input.rows && jj < input.cols)
-				output.data[i * output.rows + j] = input.data[ii * input.rows + jj];
+				output.data[i * output.cols + j] = input.data[ii * input.cols + jj];
 			else
-				output.data[i * output.rows + j] = 0;
+				output.data[i * output.cols + j] = 0;
 		}
 
 	return output;
@@ -111,8 +111,8 @@ Mat Rotation_8UC3(Mat input, double degree) {
 			int ii = (int)(cenY + ((double)i - cenY) * cc - ((double)j - cenX) * ss);
 			int jj = (int)(cenX + ((double)i - cenY) * ss + ((double)j - cenX) * cc);
 			
-			int inIdx = (ii * input.rows + jj) * 3;
-			int outIdx = (i * output.rows + j) * 3;
+			int inIdx = (ii * input.cols + jj) * 3;
+			int outIdx = (i * output.cols + j) * 3;
 
 			if (ii >= 0 && jj >= 0 && ii < input.rows && jj < input.cols)
 				for (int col = 0; col < 3; col++)
@@ -138,7 +138,7 @@ Mat FullRotation_8UC3(Mat input, double degree) {
 	const int outCenY = max(y1, y2), outCenX = max(x1, x2);
 
 	// 출력 이미지 초기화
-	Mat output(outCenX * 2, outCenY * 2, CV_8UC3);
+	Mat output(outCenY * 2, outCenX * 2, CV_8UC3);
 
 	// 계산 - 목적지에서 반대로 회전시켜 갓을 가져오도록
 	for (int i = 0; i < output.rows; i++)
@@ -146,8 +146,8 @@ Mat FullRotation_8UC3(Mat input, double degree) {
 			int ii = (int)(inCenY + ((double)j - outCenX) * ss + ((double)i - outCenY) * cc);
 			int jj = (int)(inCenX + ((double)j - outCenX) * cc - ((double)i - outCenY) * ss);
 
-			int inIdx = (ii * input.rows + jj) * 3;
-			int outIdx = (i * output.rows + j) * 3;
+			int inIdx = (ii * input.cols + jj) * 3;
+			int outIdx = (i * output.cols + j) * 3;
 
 			if (ii >= 0 && jj >= 0 && ii < input.rows && jj < input.cols)
 				for (int col = 0; col < 3; col++)
@@ -179,12 +179,15 @@ int main()
 	imshow("Rotate2 45", Rotation_8UC3(img_in, 45));
 	imshow("Rotate2 60", Rotation_8UC3(img_in, 60));*/
 
-	/*imshow("Rotate3 30", FullRotation_8UC3(img_in, 30));
-	imshow("Rotate3 45", FullRotation_8UC3(img_in, 45));
-	imshow("Rotate3 60", FullRotation_8UC3(img_in, 60));*/
+	/* More Testcase */
 
 	imshow("Resize 1", BilinearInterpolation_8UC3(img_in, 1024, 128));
 	imshow("Resize 2", BilinearInterpolation_8UC3(img_in, 128, 1024));
+
+	imshow("Rotate 1", FullRotation_8UC3(img_in, 115));
+	imshow("Rotate 2", FullRotation_8UC3(img_in, 275));
+	imshow("Rotate 3", FullRotation_8UC3(img_in, 415));
+	imshow("Rotate 4", FullRotation_8UC3(img_in, 415));
 
 	waitKey(0);
 	return 0;
