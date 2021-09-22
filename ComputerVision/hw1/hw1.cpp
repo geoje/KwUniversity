@@ -9,58 +9,58 @@ using namespace std;
 
 Mat BilinearInterpolation_8UC1(Mat input, int width, int height) {
 	// 계산에 필요한 상수
-	const double ratioW = (input.rows - 1.0) / (width - 1.0);
-	const double ratioH = (input.cols - 1.0) / (height - 1.0);
+	const double ratioH = (input.rows - 1.0) / height;
+	const double ratioW = (input.cols - 1.0) / width;
 
 	// 입력 이미지 흑백화
 	cvtColor(input, input, cv::COLOR_RGB2GRAY);
 
 	// 출력 이미지 초기화
-	Mat output(width, height, CV_8UC1);
+	Mat output(height, width, CV_8UC1);
 
 	// 계산
 	for (int i = 0; i < output.rows; i++)
 		for (int j = 0; j < output.cols; j++) {
-			int ii = (int)floor(i * ratioW); // input의 row
-			int jj = (int)floor(j * ratioH); // input의 col
+			int ii = (int)floor(i * ratioH); // input의 row
+			int jj = (int)floor(j * ratioW); // input의 col
 
-			double b = i * ratioW - (int)(i * ratioW), a = 1 - b;
-			double p = j * ratioH - (int)(j * ratioH), q = 1 - p;
+			double b = i * ratioH - (int)(i * ratioH), a = 1 - b;
+			double p = j * ratioW - (int)(j * ratioW), q = 1 - p;
 
-			uchar B = input.data[ii * input.rows + jj];
-			uchar C = input.data[ii * input.rows + jj + 1];
-			uchar A = input.data[(ii + 1) * input.rows + jj];
-			uchar D = input.data[(ii + 1) * input.rows + jj + 1];
+			uchar B = input.data[ii * input.cols + jj];
+			uchar C = input.data[ii * input.cols + jj + 1];
+			uchar A = input.data[(ii + 1) * input.cols + jj];
+			uchar D = input.data[(ii + 1) * input.cols + jj + 1];
 
-			output.data[i * output.rows + j] = q * (b * A + a * B) + p * (b * D + a * C);
+			output.data[i * width + j] = q * (b * A + a * B) + p * (b * D + a * C);
 		}
 
 	return output;
 }
 Mat BilinearInterpolation_8UC3(Mat input, int width, int height) {
 	// 계산에 필요한 상수
-	const double ratioW = (input.rows - 1.0) / (width - 1.0);
-	const double ratioH = (input.cols - 1.0) / (height - 1.0);
+	const double ratioH = (input.rows - 1.0) / height;
+	const double ratioW = (input.cols - 1.0) / width;
 
 	// 출력 이미지 초기화
-	Mat output(width, height, CV_8UC3);
+	Mat output(height, width, CV_8UC3);
 
 	// 계산
 	for (int i = 0; i < output.rows; i++)
 		for (int j = 0; j < output.cols; j++) {
-			int ii = (int)floor(i * ratioW); // input의 row
-			int jj = (int)floor(j * ratioH); // input의 col
+			int ii = (int)floor(i * ratioH); // input의 row
+			int jj = (int)floor(j * ratioW); // input의 col
 
-			int bIdx = (ii * input.rows + jj) * 3;
-			int cIdx = (ii * input.rows + jj + 1) * 3;
-			int aIdx = ((ii + 1) * input.rows + jj) * 3;
-			int dIdx = ((ii + 1) * input.rows + jj + 1) * 3;
-			int outIdx = (i * output.rows + j) * 3;
+			int bIdx = (ii * input.cols + jj) * 3;
+			int cIdx = (ii * input.cols + jj + 1) * 3;
+			int aIdx = ((ii + 1) * input.cols + jj) * 3;
+			int dIdx = ((ii + 1) * input.cols + jj + 1) * 3;
+			int outIdx = (i * output.cols + j) * 3;
 
 			// 3가지 컬러에 대해 반복
 			for (int col = 0; col < 3; col++) {
-				double b = i * ratioW - (int)(i * ratioW), a = 1 - b;
-				double p = j * ratioH - (int)(j * ratioH), q = 1 - p;
+				double b = i * ratioH - (int)(i * ratioH), a = 1 - b;
+				double p = j * ratioW - (int)(j * ratioW), q = 1 - p;
 
 				output.data[outIdx + col] =
 					q * (b * input.data[aIdx + col] + a * input.data[bIdx + col]) +
@@ -168,20 +168,23 @@ int main()
 	/*imshow("Resize1 436x436", BilinearInterpolation_8UC1(img_in, 436, 436));
 	imshow("Resize1 512x512", BilinearInterpolation_8UC1(img_in, 512, 512));*/
 
-	imshow("Resize2 436x436", BilinearInterpolation_8UC3(img_in, 436, 436));
-	imshow("Resize2 512x512", BilinearInterpolation_8UC3(img_in, 512, 512));
+	/*imshow("Resize2 436x436", BilinearInterpolation_8UC3(img_in, 436, 436));
+	imshow("Resize2 512x512", BilinearInterpolation_8UC3(img_in, 512, 512));*/
 
 	/*imshow("Rotate1 30", Rotation_8UC1(img_in, 30));
 	imshow("Rotate1 45", Rotation_8UC1(img_in, 45));
 	imshow("Rotate1 60", Rotation_8UC1(img_in, 60));*/
 
-	imshow("Rotate2 30", Rotation_8UC3(img_in, 30));
+	/*imshow("Rotate2 30", Rotation_8UC3(img_in, 30));
 	imshow("Rotate2 45", Rotation_8UC3(img_in, 45));
-	imshow("Rotate2 60", Rotation_8UC3(img_in, 60));
+	imshow("Rotate2 60", Rotation_8UC3(img_in, 60));*/
 
 	/*imshow("Rotate3 30", FullRotation_8UC3(img_in, 30));
 	imshow("Rotate3 45", FullRotation_8UC3(img_in, 45));
 	imshow("Rotate3 60", FullRotation_8UC3(img_in, 60));*/
+
+	imshow("Resize 1", BilinearInterpolation_8UC3(img_in, 1024, 128));
+	imshow("Resize 2", BilinearInterpolation_8UC3(img_in, 128, 1024));
 
 	waitKey(0);
 	return 0;
