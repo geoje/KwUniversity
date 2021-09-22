@@ -143,7 +143,7 @@ Mat FullRotation_8UC3(Mat input, double degree) {
 	// 계산 - 목적지에서 반대로 회전시켜 갓을 가져오도록
 	for (int i = 0; i < output.rows; i++)
 		for (int j = 0; j < output.cols; j++) {
-			int ii = (int)(inCenX + ((double)j - outCenX) * ss + ((double)i - outCenY) * cc);
+			int ii = (int)(inCenY + ((double)j - outCenX) * ss + ((double)i - outCenY) * cc);
 			int jj = (int)(inCenX + ((double)j - outCenX) * cc - ((double)i - outCenY) * ss);
 
 			int inIdx = (ii * input.rows + jj) * 3;
@@ -165,23 +165,23 @@ int main()
 	Mat img_in = imread("Lena_256x256.png");
 
 	imshow("Input", img_in);
-	imshow("Resize1 436x436", BilinearInterpolation_8UC1(img_in, 436, 436));
-	imshow("Resize1 512x512", BilinearInterpolation_8UC1(img_in, 512, 512));
+	/*imshow("Resize1 436x436", BilinearInterpolation_8UC1(img_in, 436, 436));
+	imshow("Resize1 512x512", BilinearInterpolation_8UC1(img_in, 512, 512));*/
 
 	imshow("Resize2 436x436", BilinearInterpolation_8UC3(img_in, 436, 436));
 	imshow("Resize2 512x512", BilinearInterpolation_8UC3(img_in, 512, 512));
 
-	imshow("Rotate1 30", Rotation_8UC1(img_in, 30));
+	/*imshow("Rotate1 30", Rotation_8UC1(img_in, 30));
 	imshow("Rotate1 45", Rotation_8UC1(img_in, 45));
-	imshow("Rotate1 60", Rotation_8UC1(img_in, 60));
+	imshow("Rotate1 60", Rotation_8UC1(img_in, 60));*/
 
 	imshow("Rotate2 30", Rotation_8UC3(img_in, 30));
 	imshow("Rotate2 45", Rotation_8UC3(img_in, 45));
 	imshow("Rotate2 60", Rotation_8UC3(img_in, 60));
 
-	imshow("Rotate3 30", FullRotation_8UC3(img_in, 30));
+	/*imshow("Rotate3 30", FullRotation_8UC3(img_in, 30));
 	imshow("Rotate3 45", FullRotation_8UC3(img_in, 45));
-	imshow("Rotate3 60", FullRotation_8UC3(img_in, 60));
+	imshow("Rotate3 60", FullRotation_8UC3(img_in, 60));*/
 
 	waitKey(0);
 	return 0;
