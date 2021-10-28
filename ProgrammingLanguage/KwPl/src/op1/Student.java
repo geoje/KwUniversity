@@ -14,7 +14,7 @@ abstract class Student implements Observer {
         if (lecture == null)
             return false;
         else {
-            lecture.reomverObserver(this);
+            lecture.reomveObserver(this);
             lecture = null;
             return true;
         }

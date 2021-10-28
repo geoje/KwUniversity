@@ -16,7 +16,7 @@ class Lecture implements Subject {
     }
 
     @Override
-    public void reomverObserver(Observer o) {
+    public void reomveObserver(Observer o) {
         students.remove(o);
     }
 

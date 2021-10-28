@@ -1,6 +1,6 @@
 package op1;
 
-class ObserverPattern1 {
+class Main {
 	public static void main(String[] args) {
 		// 강의가 개설된다.
 		Lecture programmingLanguage = new Lecture();
