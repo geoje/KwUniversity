@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch ObserverPattern1",
+            "request": "launch",
+            "mainClass": "src.ObserverPattern1",
+            "projectName": "KwPl"
+        },
+        {
+            "type": "java",
+            "name": "Launch ObserverPattern1",
+            "request": "launch",
+            "mainClass": "ObserverPattern1",
+            "projectName": "KwPl"
+        },
+        {
             "name": "gcc - 활성 파일 빌드 및 디버그",
             "type": "cppdbg",
             "request": "launch",
