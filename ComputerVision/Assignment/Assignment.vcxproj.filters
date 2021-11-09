@@ -13,19 +13,37 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\hw2">
+      <UniqueIdentifier>{c4b38967-7944-4f15-86be-4fb17fb4fe4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw1">
+      <UniqueIdentifier>{d3bf6d73-3539-490c-a296-5bc15b340447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw3">
+      <UniqueIdentifier>{99fed6c3-f275-4435-bb50-e54bb175db95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hw1.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw1</Filter>
     </ClCompile>
     <ClCompile Include="hw2-1.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw2</Filter>
     </ClCompile>
     <ClCompile Include="hw2-2.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw2</Filter>
     </ClCompile>
     <ClCompile Include="hw2-3.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw2</Filter>
+    </ClCompile>
+    <ClCompile Include="hw3-2.cpp">
+      <Filter>소스 파일\hw3</Filter>
+    </ClCompile>
+    <ClCompile Include="hw3-3.cpp">
+      <Filter>소스 파일\hw3</Filter>
+    </ClCompile>
+    <ClCompile Include="hw3-1.cpp">
+      <Filter>소스 파일\hw3</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
