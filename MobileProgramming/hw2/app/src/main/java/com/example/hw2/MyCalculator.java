@@ -52,7 +52,7 @@ public class MyCalculator extends AppCompatActivity {
         btns.put('=', (Button) findViewById(R.id.btnRes));
 
         btns.forEach((c, btn) -> btn.setOnClickListener(v -> {
-            if (c == '=') tvResult.setText(Double.toString(calculate()));
+            if (c == '=') tvResult.setText(calculate().toString());
             else tvExpr.setText(expression += c);
         }));
 
@@ -73,7 +73,7 @@ public class MyCalculator extends AppCompatActivity {
             return;
 
         tvExpr.setText(expression = intent.getStringExtra(Intent.EXTRA_TEXT));
-        tvResult.setText(new BigDecimal(calculate()).toString());
+        tvResult.setText(calculate().toString());
     }
 
     double popNumber() {
@@ -105,7 +105,7 @@ public class MyCalculator extends AppCompatActivity {
         else if (op == '/') operands.push(left / right);
         return true;
     }
-    double calculate() {
+    BigDecimal calculate() {
         // 자료구조 초기화
         q = new LinkedList<>();
         operands = new Stack<>();
@@ -140,6 +140,6 @@ public class MyCalculator extends AppCompatActivity {
 
         // 남은 연산 (덧셈, 나눗셈) 계산
         while (calcByStack()) ;
-        return operands.peek();
+        return new BigDecimal(operands.peek());
     }
 }
