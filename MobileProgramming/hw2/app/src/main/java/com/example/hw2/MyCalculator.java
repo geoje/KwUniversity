@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -52,7 +51,7 @@ public class MyCalculator extends AppCompatActivity {
         btns.put('=', (Button) findViewById(R.id.btnRes));
 
         btns.forEach((c, btn) -> btn.setOnClickListener(v -> {
-            if (c == '=') tvResult.setText(calculate().toString());
+            if (c == '=') tvResult.setText(calculateByJS());
             else tvExpr.setText(expression += c);
         }));
 
@@ -73,7 +72,7 @@ public class MyCalculator extends AppCompatActivity {
             return;
 
         tvExpr.setText(expression = intent.getStringExtra(Intent.EXTRA_TEXT));
-        tvResult.setText(calculate().toString());
+        tvResult.setText(calculateByJS());
     }
 
     double popNumber() {
@@ -105,7 +104,7 @@ public class MyCalculator extends AppCompatActivity {
         else if (op == '/') operands.push(left / right);
         return true;
     }
-    BigDecimal calculate() {
+    String calculateByStack() {
         // 자료구조 초기화
         q = new LinkedList<>();
         operands = new Stack<>();
@@ -140,6 +139,17 @@ public class MyCalculator extends AppCompatActivity {
 
         // 남은 연산 (덧셈, 나눗셈) 계산
         while (calcByStack()) ;
-        return new BigDecimal(operands.peek());
+        return new BigDecimal(operands.peek()).toString();
+    }
+    String calculateByJS() {
+        javax.script.ScriptEngine engine = new javax.script.ScriptEngineManager().getEngineByName("rhino");
+        String result;
+        try {
+            result = engine.eval(expression.replaceAll("[xX]", "*")).toString();
+        }
+        catch(javax.script.ScriptException e) {
+            result = "Expression Error";
+        }
+        return result;
     }
 }
