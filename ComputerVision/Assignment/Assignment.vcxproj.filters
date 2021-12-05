@@ -22,6 +22,9 @@
     <Filter Include="소스 파일\hw3">
       <UniqueIdentifier>{99fed6c3-f275-4435-bb50-e54bb175db95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\hw4">
+      <UniqueIdentifier>{146229ef-531e-4f34-bf00-026980858493}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hw1.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="hw3-1.cpp">
       <Filter>소스 파일\hw3</Filter>
+    </ClCompile>
+    <ClCompile Include="hw4.cpp">
+      <Filter>소스 파일\hw4</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 // need "opencv_world***.dll"  in working directory
 // need "opencv_world***d.dll" in working directory
+// C:\opencv\build\x64\vc15\bin\
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
