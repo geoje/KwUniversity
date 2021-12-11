@@ -5,32 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ThreadFirstActivity">
+    tools:context=".ReceiverFirstActivity">
 
     <TextView
-        android:id="@+id/tvCall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
-
+        android:layout_margin="10dp"
+        android:text="기본적으로 인텐트에는 FLAG_EXCLUDE_STOPPED_PACKAGES 플래그가 설정되어 앱이 최초 1회 실행 된 후에 방송을 들을 수 있게 된다."/>
     <TextView
-        android:id="@+id/tvCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:text="FLAG_INCLUDE_STOPPED_PACKAGES 플래그를 설정하면 앱이 최초 1회 실행되지 않아도 방송을 들을 수 있는 인텐트를 만들 수 있다."/>
 
     <Button
-        android:id="@+id/btnPermission"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Permission"/>
-
-    <TextView
-        android:id="@+id/tvCount"
+        android:id="@+id/btnBroadcastStatic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="0"/>
+        android:text="Start Broadcasting Static" />
+    <Button
+        android:id="@+id/btnBroadcastDynamic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Start Broadcasting Dynamic" />
 
 </LinearLayout>

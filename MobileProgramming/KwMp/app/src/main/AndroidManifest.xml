@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kwmp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KwMp">
+        <activity
+            android:name=".ReceiverThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReceiverSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReceiverFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ThreadThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ThreadSecondActivity"
+            android:exported="false" />
         <activity
             android:name=".ThreadFirstActivity"
             android:exported="false" />
@@ -21,6 +40,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".BroadcastSideReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.kwmp.action.FILE_DOWNLOADED_STATIC" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
