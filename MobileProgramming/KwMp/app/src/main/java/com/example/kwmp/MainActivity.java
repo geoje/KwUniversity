@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem("14장 - Thread 3", "- AsyncTask 사용\n- CountDownTimer 사용\n- HandlerThread는 뭐야", new Intent(this, ThreadThirdActivity.class));
         adapter.addItem("15장 - Broadcast Receiver 1", "- 정적 리시버 BroadcastReceiver 사용\n- 동적 리시버 BroadcastReceiver 사용", new Intent(this, ReceiverFirstActivity.class));
         adapter.addItem("15장 - Broadcast Receiver 2", "- 리시버 동작 제한\n- 화면 방송 듣기\n- 배터리 상태 방송 듣기", new Intent(this, ReceiverSecondActivity.class));
-        adapter.addItem("15장 - Broadcast Receiver 3", "IntentFilter, LocalBroadcastManager 사용", null);
-        adapter.addItem("18장 - Service 1", "Service를 상속받아 클래스를 만들고 startService 실행", null);
+        adapter.addItem("15장 - Broadcast Receiver 3", "- 로컬 LocalBroadcastManager 사용", new Intent(this, ReceiverThirdActivity.class));
+        adapter.addItem("18장 - Service 1", "- 스타티드 Service 사용", new Intent(this, ServiceFirstActivity.class));
         adapter.addItem("18장 - Service 2", "아직 배우지 않음", null);
         adapter.addItem("18장 - Service 3", "아직 배우지 않음", null);
     }

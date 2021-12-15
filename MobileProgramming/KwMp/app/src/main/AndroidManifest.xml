@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KwMp">
         <activity
+            android:name=".ServiceSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ServiceFirstActivity"
+            android:exported="false" />
+        <activity
             android:name=".ReceiverThirdActivity"
             android:exported="false" />
         <activity
@@ -43,11 +49,19 @@
 
         <receiver
             android:name=".BroadcastSideReceiver"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.example.kwmp.action.FILE_DOWNLOADED_STATIC" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".CountService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.kwmp.service.COUNTING" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

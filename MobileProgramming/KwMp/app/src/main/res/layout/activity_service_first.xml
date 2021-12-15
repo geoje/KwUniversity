@@ -5,19 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ReceiverThirdActivity">
-
-    <TextView
-        android:id="@+id/tvCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+    tools:context=".ServiceFirstActivity">
 
     <Button
-        android:id="@+id/btnBroadcast"
-        android:layout_width="match_parent"
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Send Broadcast"/>
+        android:text="Start Counting"/>
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Counting"/>
+    <Button
+        android:id="@+id/btnShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Counting Number"/>
 
 </LinearLayout>
