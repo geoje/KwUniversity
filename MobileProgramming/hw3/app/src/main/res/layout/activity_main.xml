@@ -3,12 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".MainActivity">
 
     <ListView
         android:id="@+id/lvMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"/>
+        android:divider="@null"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

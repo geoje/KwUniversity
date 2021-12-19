@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:textSize="16dp"
         android:text="Title"/>
@@ -35,7 +35,7 @@
             android:layout_height="48dp"/>
         <ImageView
             android:id="@+id/ivPlay"
-            android:src="@drawable/ic_baseline_pause_24"
+            android:src="@drawable/ic_baseline_play_arrow_24"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"

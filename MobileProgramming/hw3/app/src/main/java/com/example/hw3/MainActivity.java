@@ -3,9 +3,11 @@ package com.example.hw3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,83 +16,101 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private IMusicService mBinder;
+    private ServiceConnection mConnection;
+
+    ListView lvMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 커스텀 리스트 뷰
-        ListView lvMain = findViewById(R.id.lvMain);
-        lvMain.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainActivity.this, PlayActivity.class);
-            intent.putParcelableArrayListExtra("MUSIC_ITEMS", ((ListViewAdapter)parent.getAdapter()).getAllItems());
-            intent.putExtra("POSITION", position);
-            startActivity(intent);
-        });
-
         // 저장소 엑세스 권한 요청
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
-        // 미디어 스캐너
-        MediaScannerConnection.scanFile(
-                getApplicationContext(),
-                new String[] {Environment.getExternalStorageDirectory().getAbsolutePath()},
-                null,
-                (path, uri) -> {
-                    // 리스트뷰에 아이템들 넣기
-                    ArrayList<MusicItem> items = getMusicItemListFromMediaStore();
-                    MainActivity.this.runOnUiThread(() -> {
-                        ListViewAdapter adapter = new ListViewAdapter();
-                        items.forEach(adapter::addItem);
-                        lvMain.setAdapter(adapter);
-                    });
-                });
+        // 커스텀 리스트 뷰
+        lvMain = findViewById(R.id.lvMain);
+        lvMain.setOnItemClickListener((parent, view, position, id) -> {
+            MusicItem item = (MusicItem)((ListViewAdapter)parent.getAdapter()).getItem(position);
+
+            Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+            intent.putExtra("MUSIC_ITEM", item);
+            intent.putExtra("INDEX", position);
+            startActivity(intent);
+        });
+
+        // 뮤직 서비스 연결
+        mConnection = new ServiceConnection() {
+
+            // 서비스 연결시 뮤직 정보들을 리스트뷰에 추가
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mBinder = IMusicService.Stub.asInterface(service);
+                InitUI();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        Intent serviceIntent = new Intent(this, MusicService.class);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
     }
 
-    ArrayList<MusicItem> getMusicItemListFromMediaStore() {
-        ArrayList<MusicItem> items = new ArrayList<>();
+    @Override
+    protected void onDestroy() {
+        unbindService(mConnection);
+        super.onDestroy();
+    }
 
-        // 쿼리 실행하여 커서 가져오기
-        Cursor cursor = getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[] {
-                        MediaStore.Audio.Media.TITLE,
-                        MediaStore.Audio.Media.DATA,
-                        MediaStore.Audio.Media.ALBUM_ID,
-                        MediaStore.Audio.Media.DURATION
-                }, null, null, null);
+    void InitUI() {
+        // 서비스에서 음악 리스트가 로드될 때 까지 0.1 ~ 0.2초 무한 랜덤 대기
+        new Thread(() -> {
+            List<MusicItem> items = null;
+            Random rand = new Random();
 
-        // 순회하여 리스트뷰에 추가
-        if (cursor.moveToFirst()) {
-            do {
-                // 커서에서 데이터 추출
-                String title = cursor.getString(0);
-                String filename = cursor.getString(1);
-                long albumId = cursor.getLong(2);
-                long duration = cursor.getLong(3);
+            try {
+                while ((items = mBinder.getMusicItems()) == null) {
+                    Thread.sleep(rand.nextInt(100) + 100);
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                // 확장자 'mp3'만 추출
-                if (!filename.endsWith(".mp3")) continue;
+            // 끝나면 UI 업데이트
+            List<MusicItem> finalItems = items;
+            runOnUiThread(() -> {
+                // 리스트 뷰 보이기
+                lvMain.setVisibility(View.VISIBLE);
 
-                // 리스트뷰에 추가
-                items.add(new MusicItem(title, filename, albumId, duration));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
+                // 리스트 뷰 데이터 추가
+                ListViewAdapter adapter = new ListViewAdapter();
+                finalItems.forEach(adapter::addItem);
+                lvMain.setAdapter(adapter);
 
-        return items;
+                // 써큘러 프로그래스 바 가리기
+                findViewById(R.id.pbLoading).setVisibility(View.GONE);
+            });
+        }).start();
     }
 }

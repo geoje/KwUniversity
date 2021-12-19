@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,11 +16,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class PlayActivity extends AppCompatActivity {
-    ArrayList<MusicItem> items;
-    int position;
+    boolean isPlaying = false;
 
     private IMusicService mBinder;
     private ServiceConnection mConnection;
+
+    ImageView ivPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +29,21 @@ public class PlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play);
 
         // 인텐트에서 뮤직 아이템 받기
-        items = getIntent().getParcelableArrayListExtra("MUSIC_ITEMS");
-        position = getIntent().getIntExtra("POSITION", 0);
-        MusicItem item = items.get(position);
+        MusicItem item = getIntent().getParcelableExtra("MUSIC_ITEM");
+        int index = getIntent().getIntExtra("INDEX", 0);
+        UpdateMusicInfo(item);
 
-        ((ImageView)findViewById(R.id.ivImage)).setImageBitmap(item.getImage(this));
-        ((TextView)findViewById(R.id.tvTitle)).setText(item.getTitle());
-        ((TextView)findViewById(R.id.tvTime)).setText(
-                String.format(Locale.KOREA, "00:00 / %s",
-                        convertDurationToString(item.getDuration())));
-
-        // 바운드 서비스 연결
+        // 바운드 서비스 연결 후 자동으로 음악 재생
+        ivPlay = findViewById(R.id.ivPlay);
+        Intent serviceIntent = new Intent(this, MusicService.class);
         mConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mBinder = IMusicService.Stub.asInterface(service);
                 try {
-                    mBinder.Start(item.getFilename());
+                    mBinder.Play(index);
+                    isPlaying = true;
+                    ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -54,19 +54,51 @@ public class PlayActivity extends AppCompatActivity {
 
             }
         };
-        Intent serviceIntent = new Intent("com.example.hw3.service.MUSIC");
         bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
 
         // 이미지 버튼들 이벤트 등록
-        findViewById(R.id.ivPlay).setOnClickListener(v -> {
+        ivPlay.setOnClickListener(v -> {
             try {
-                mBinder.Start(item.getFilename());
+                // 중지
+                if (isPlaying) {
+                    isPlaying = false;
+                    mBinder.Pause();
+
+                    ivPlay.setImageResource(R.drawable.ic_baseline_play_arrow_24);
+                }
+                // 재생
+                else {
+                    isPlaying = true;
+                    mBinder.Resume();
+
+                    ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         });
-        findViewById(R.id.ivPrev).setOnClickListener(v -> {});
-        findViewById(R.id.ivNext).setOnClickListener(v -> {});
+        findViewById(R.id.ivPrev).setOnClickListener(v -> {
+            try {
+                UpdateMusicInfo(mBinder.Prev());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            if (!isPlaying) {
+                isPlaying = true;
+                ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
+            }
+        });
+        findViewById(R.id.ivNext).setOnClickListener(v -> {
+            try {
+                UpdateMusicInfo(mBinder.Next());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            if (!isPlaying) {
+                isPlaying = true;
+                ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
+            }
+        });
     }
 
     @Override
@@ -75,13 +107,12 @@ public class PlayActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    // 분 까지만
-    String convertDurationToString(long duration) {
-        duration /= 1000;
-
-        long s = duration % 60;
-        long m = duration / 60 % 60;
-
-        return String.format(Locale.KOREA, "%02d:%02d", m, s);
+    // 앨범의 이미지, 곡이름 등을 통해 UI 업데이트
+    void UpdateMusicInfo(MusicItem item) {
+        ((ImageView)findViewById(R.id.ivImage)).setImageBitmap(item.getImage(this));
+        ((TextView)findViewById(R.id.tvTitle)).setText(item.getTitle());
+        ((TextView)findViewById(R.id.tvTime)).setText(
+                String.format(Locale.KOREA, "00:00 / %s",
+                        MusicItem.convertDurationToString(item.getDuration())));
     }
 }

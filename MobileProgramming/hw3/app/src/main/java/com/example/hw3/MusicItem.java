@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Locale;
 
 public class MusicItem implements Parcelable {
     private static final BitmapFactory.Options bitmapOptionsCache = new BitmapFactory.Options();
@@ -119,5 +120,14 @@ public class MusicItem implements Parcelable {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public static String convertDurationToString(long duration) {
+        duration /= 1000;
+
+        long s = duration % 60;
+        long m = duration / 60 % 60;
+
+        return String.format(Locale.KOREA, "%02d:%02d", m, s);
     }
 }
