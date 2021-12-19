@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unbindService(mConnection);
+        stopService(new Intent(this, MusicService.class));
         super.onDestroy();
     }
 

@@ -15,4 +15,5 @@ interface IMusicService {
     List<MusicItem> getMusicItems();
     MusicItem getMusicItem(int index);
     boolean isPlaying();
+    int[] getCurrentInfo();
 }

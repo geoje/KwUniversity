@@ -106,6 +106,20 @@ public class MusicService extends Service {
         public boolean isPlaying() throws RemoteException {
             return player.isPlaying();
         }
+
+        @Override
+        public int[] getCurrentInfo() throws RemoteException {
+            int info[] = new int[] { position, 0, 1 };
+
+            try {
+                info[1] = player.getCurrentPosition();
+                info[2] = player.isPlaying() ? 1 : 0;
+            }
+            catch (Exception e) { }
+
+            // 현재 노래 인덱스, 현재 진행 위치, 재생 중 여부
+            return info;
+        }
     };
 
     // 미디어 스캐너에 갱신 요청 후 미디어 스토어의 음악 파일 로드
