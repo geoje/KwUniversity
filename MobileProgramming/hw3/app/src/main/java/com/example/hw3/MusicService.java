@@ -1,6 +1,5 @@
 package com.example.hw3;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
@@ -43,7 +41,7 @@ public class MusicService extends Service {
 
     IMusicService.Stub mBinder = new IMusicService.Stub() {
         @Override
-        public MusicItem Play(int index) throws RemoteException {
+        public MusicItem Play(int index, int seekPos) throws RemoteException {
             if (player != null) player.release();
             position = index;
             MusicItem item = items.get(position);
@@ -53,6 +51,7 @@ public class MusicService extends Service {
                 player = new MediaPlayer();
                 player.setDataSource(item.getFilename());
                 player.setOnPreparedListener(mp -> {
+                    mp.seekTo(seekPos);
                     mp.start();
                     Notify(item);
                 });
@@ -82,13 +81,13 @@ public class MusicService extends Service {
         @Override
         public MusicItem Next() throws RemoteException {
             position = ++position % items.size();
-            Play(position);
+            Play(position, 0);
             return items.get(position);
         }
         @Override
         public MusicItem Prev() throws RemoteException {
             if (--position <= 0) position = items.size() - 1;
-            Play(position);
+            Play(position, 0);
             return items.get(position);
         }
 
@@ -125,6 +124,7 @@ public class MusicService extends Service {
     // 미디어 스캐너에 갱신 요청 후 미디어 스토어의 음악 파일 로드
     @Override
     public void onCreate() {
+        Log.i("MusicService.onCreate()", "");
         // 미디어 스캐너로 음악 리스트 로드
         MediaScannerConnection.scanFile(
                 getApplicationContext(),
@@ -165,6 +165,7 @@ public class MusicService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.i("MusicService.onDestroy()", "");
         if (player != null)
             player.release();
         super.onDestroy();
@@ -213,10 +214,14 @@ public class MusicService extends Service {
         }
 
         // 알림창을 클릭했을 때
-        Intent mainIntent = new Intent(MusicService.this, MainActivity.class);
+        Intent mainIntent = new Intent(getApplicationContext(), PlayActivity.class);
         mainIntent.setAction(MAIN_ACTION);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pMainIntent = PendingIntent.getActivity(MusicService.this, 0, mainIntent, 0);
+        mainIntent.putExtra("MUSIC_ITEM", items.get(position));
+        mainIntent.putExtra("INDEX", position);
+        mainIntent.putExtra("SEEK_POS", player.getCurrentPosition());
+        mainIntent.putExtra("IS_PLAYING", player.isPlaying());
+        PendingIntent pMainIntent = PendingIntent.getActivity(MusicService.this, 0, mainIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         // 이전 버튼
         Intent prevIntent = new Intent(MusicService.this, MusicService.class);
@@ -235,7 +240,7 @@ public class MusicService extends Service {
 
         // 알림창 세팅
         notiBuilder = new NotificationCompat.Builder(MusicService.this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_baseline_play_arrow_24)
+                .setSmallIcon(player.isPlaying() ? R.drawable.ic_baseline_play_arrow_24 : R.drawable.ic_baseline_pause_24)
                 .setLargeIcon(item.getImage(MusicService.this))
                 .setContentTitle("광운 모프 플레이어")
                 .setContentText(item.getTitle())

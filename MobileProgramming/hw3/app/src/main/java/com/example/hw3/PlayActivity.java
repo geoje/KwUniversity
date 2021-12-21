@@ -31,6 +31,8 @@ public class PlayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("PlayActivity.onCreate()", "");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
@@ -40,37 +42,6 @@ public class PlayActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tvTitle);
         tvTime = findViewById(R.id.tvTime);
         pbTime = findViewById(R.id.pbTime);
-
-        // 인텐트에서 뮤직 아이템 받기
-        MusicItem item = getIntent().getParcelableExtra("MUSIC_ITEM");
-        position = getIntent().getIntExtra("INDEX", 0);
-        updateMusicInfo(item);
-
-        // 바운드 서비스 연결 후 자동으로 음악 재생
-        Intent serviceIntent = new Intent(this, MusicService.class);
-        mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mBinder = IMusicService.Stub.asInterface(service);
-                try {
-                    mBinder.Play(position);
-                    isPlaying = true;
-                    ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
-
-                    // 진행도 스레드 생성 및 실행
-                    seekThread = new Thread(PlayActivity.this::seekAndUpdateUIThread);
-                    seekThread.start();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
 
         // 이미지 버튼들 이벤트 등록
         ivPlay.setOnClickListener(v -> {
@@ -115,10 +86,53 @@ public class PlayActivity extends AppCompatActivity {
                 ivPlay.setImageResource(R.drawable.ic_baseline_pause_24);
             }
         });
+
+        // 인텐트에서 뮤직 아이템 받기
+        MusicItem item = getIntent().getParcelableExtra("MUSIC_ITEM");
+        position = getIntent().getIntExtra("INDEX", 0);
+        int seekPos = getIntent().getIntExtra("SEEK_POS", 0);
+        isPlaying = getIntent().getBooleanExtra("IS_PLAYING", true);
+        Log.i("PlayActivity.onCreate.seekPos", Integer.toString(seekPos));
+        updateMusicInfo(item);
+
+        // 알림창에서 로드되면 item 이 null 임
+        boolean isLoadedNoti = getIntent().getAction() != null &&
+                getIntent().getAction().equals(MusicService.MAIN_ACTION);
+
+        // 바운드 서비스 연결 후 자동으로 음악 재생 or 인포 들고오기
+        Intent serviceIntent = new Intent(this, MusicService.class);
+        mConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Log.i("PlayActivity.mConnection.onServiceConnected()", "");
+                mBinder = IMusicService.Stub.asInterface(service);
+                try {
+                    // 플레이어 세팅 및 시작 or 중지
+                    mBinder.Play(position, seekPos);
+                    if (!isPlaying) mBinder.Pause();
+                    ivPlay.setImageResource(isPlaying ?
+                            R.drawable.ic_baseline_pause_24 :
+                            R.drawable.ic_baseline_play_arrow_24);
+
+                    // 진행도 스레드 생성 및 실행
+                    seekThread = new Thread(PlayActivity.this::seekAndUpdateUIThread);
+                    seekThread.start();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onDestroy() {
+        Log.i("PlayActivity.onDestroy()", "");
         unbindService(mConnection);
         if (seekThread != null && seekThread.isAlive())
             seekThread.interrupt();
