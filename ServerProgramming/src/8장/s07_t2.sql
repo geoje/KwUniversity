@@ -1,0 +1,17 @@
+ SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+START TRANSACTION;
+USE madang;
+SET SQL_SAFE_UPDATES=0; 
+
+UPDATE Book 
+SET     price=price+500
+WHERE  bookid=1;
+
+/* 대기 상태가 됨, T1이 COMMIT하면 실행됨 */
+ -- t1
+ 
+SELECT SUM(price) 총액
+FROM   Book;
+
+COMMIT;

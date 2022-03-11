@@ -1,0 +1,1 @@
+SELECT 	ABS(-78), ABS(+78); 

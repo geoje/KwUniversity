@@ -1,0 +1,16 @@
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+START TRANSACTION;
+USE madang;
+SELECT SUM(price) 총액
+FROM   Book;
+ 
+-- t2
+
+SELECT SUM(price) 총액
+FROM   Book;
+/* 앞의 결과와 같음 */
+
+
+COMMIT
+;
+

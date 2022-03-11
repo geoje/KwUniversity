@@ -1,0 +1,3 @@
+   GRANT ALL PRIVILEGES ON *.* TO madang@localhost WITH GRANT OPTION;
+   FLUSH PRIVILEGES;
+   SHOW GRANTS FOR madang@localhost;

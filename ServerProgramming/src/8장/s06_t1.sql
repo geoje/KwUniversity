@@ -1,0 +1,16 @@
+
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+START TRANSACTION;
+USE madang;
+SELECT SUM(price) 총액
+FROM   Book;
+
+-- t2
+ 
+
+SELECT SUM(price) 총액
+FROM   Book;
+/* 앞의 결과와 다름 */
+ 
+COMMIT;

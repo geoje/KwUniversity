@@ -1,0 +1,24 @@
+-- t1
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+START TRANSACTION;
+USE madang;
+
+SELECT * 
+FROM   Users
+WHERE age BETWEEN 10 AND 30;
+
+-- > t2
+
+SELECT * 
+FROM   Users
+WHERE age BETWEEN 10 AND 30;
+-- PANTOM READ 발생하지 않음
+
+COMMIT;
+
+-- 이후 실습을 위해 삭제
+DELETE FROM Users
+WHERE age='27';
+
+
+
