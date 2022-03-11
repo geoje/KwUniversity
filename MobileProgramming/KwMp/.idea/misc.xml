@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_main.xml" value="0.5494791666666666" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_receiver_first.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_receiver_second.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_receiver_third.xml" value="0.3177083333333333" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_service_first.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_service_second.xml" value="0.2672239108409321" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_thread_first.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_thread_second.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/activity_thread_third.xml" value="0.5" />
+        <entry key="..\:/Users/chchc/source/repos/geoje/KwUniversity/MobileProgramming/KwMp/app/src/main/res/layout/listview_main.xml" value="0.5348958333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

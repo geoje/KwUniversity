@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ReceiverFirstActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="기본적으로 인텐트에는 FLAG_EXCLUDE_STOPPED_PACKAGES 플래그가 설정되어 앱이 최초 1회 실행 된 후에 방송을 들을 수 있게 된다."/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="FLAG_INCLUDE_STOPPED_PACKAGES 플래그를 설정하면 앱이 최초 1회 실행되지 않아도 방송을 들을 수 있는 인텐트를 만들 수 있다."/>
+
+    <Button
+        android:id="@+id/btnBroadcastStatic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Start Broadcasting Static" />
+    <Button
+        android:id="@+id/btnBroadcastDynamic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Start Broadcasting Dynamic" />
+
+</LinearLayout>

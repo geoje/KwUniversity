@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kwmp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.KwMp">
+        <activity
+            android:name=".ServiceSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ServiceFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReceiverThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReceiverSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReceiverFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ThreadThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ThreadSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ThreadFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".BroadcastSideReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.kwmp.action.FILE_DOWNLOADED_STATIC" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".CountService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.kwmp.service.COUNTING" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>
