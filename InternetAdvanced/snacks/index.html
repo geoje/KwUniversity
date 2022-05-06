@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시애틀 쇼핑몰</title>
+    <style>
+        body {
+            padding: 1rem;
+            background-color: rgb(248, 248, 248);
+        }
+        h1 {
+            text-align: center;
+        }
+        hr {
+            border-color: lightskyblue;
+        }
+
+        div {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        a {
+            width: 18%;
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+
+            color: #000;
+            background-color: #fff;
+            text-decoration: none;
+
+            border-radius: 4px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            box-shadow: rgb(0 0 0 / 4%) 0px 4px 16px 0px;
+        }
+        a:hover {
+            box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
+            transform: translateY(-4px);
+        }
+        img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>시애틀 쇼핑몰</h1>
+    <hr>
+    <div>
+        <a href="abocado/"><img src="abocado.png"><h4>아보카도</h4></a>
+        <a href="apple/"><img src="apple.png"><h4>사과</h4></a>
+        <a href="banana/"><img src="banana.png"><h4>바나나</h4></a>
+        <a href="grapefruit/"><img src="grapefruit.png"><h4>자몽</h4></a>
+        <a href="kiwi/"><img src="kiwi.png"><h4>키위</h4></a>
+        <a href="lemon/"><img src="lemon.png"><h4>레몬</h4></a>
+        <a href="lime/"><img src="lime.png"><h4>라임</h4></a>
+        <a href="melon/"><img src="melon.png"><h4>멜론</h4></a>
+        <a href="orange/"><img src="orange.png"><h4>오렌지</h4></a>
+        <a href="strawberry/"><img src="strawberry.png"><h4>딸기</h4></a>
+    </div>
+</body>
+</html>
