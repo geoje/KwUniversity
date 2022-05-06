@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시애틀 쇼핑몰</title>
+    <title>시애틀 쇼핑물 > 과일</title>
     <style>
         body {
             padding: 1rem;
@@ -17,13 +17,18 @@
             border-color: lightskyblue;
         }
 
+        body > a {
+            display: table;
+            margin: 0 0 1rem auto;
+        }
+
         div {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 1rem;
         }
-        a {
+        div > a {
             width: 18%;
             display: flex;
             flex-flow: column;
@@ -37,7 +42,7 @@
             transition: box-shadow 0.2s, transform 0.2s;
             box-shadow: rgb(0 0 0 / 4%) 0px 4px 16px 0px;
         }
-        a:hover {
+        div > a:hover {
             box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
             transform: translateY(-4px);
         }
@@ -53,17 +58,18 @@
 <body>
     <h1>시애틀 쇼핑몰</h1>
     <hr>
+    <a href="javascript:history.back()">뒤로가기</a>
     <div>
-        <a href="abocado/"><img src="abocado.png"><h4>아보카도</h4></a>
-        <a href="apple/"><img src="apple.png"><h4>사과</h4></a>
-        <a href="banana/"><img src="banana.png"><h4>바나나</h4></a>
-        <a href="grapefruit/"><img src="grapefruit.png"><h4>자몽</h4></a>
-        <a href="kiwi/"><img src="kiwi.png"><h4>키위</h4></a>
-        <a href="lemon/"><img src="lemon.png"><h4>레몬</h4></a>
-        <a href="lime/"><img src="lime.png"><h4>라임</h4></a>
-        <a href="melon/"><img src="melon.png"><h4>멜론</h4></a>
-        <a href="orange/"><img src="orange.png"><h4>오렌지</h4></a>
-        <a href="strawberry/"><img src="strawberry.png"><h4>딸기</h4></a>
+        <a href="abocado.html"><img src="abocado.png"><h4>아보카도</h4></a>
+        <a href="apple.html"><img src="apple.png"><h4>사과</h4></a>
+        <a href="banana.html"><img src="banana.png"><h4>바나나</h4></a>
+        <a href="grapefruit.html"><img src="grapefruit.png"><h4>자몽</h4></a>
+        <a href="kiwi.html"><img src="kiwi.png"><h4>키위</h4></a>
+        <a href="lemon.html"><img src="lemon.png"><h4>레몬</h4></a>
+        <a href="lime.html"><img src="lime.png"><h4>라임</h4></a>
+        <a href="melon.html"><img src="melon.png"><h4>멜론</h4></a>
+        <a href="orange.html"><img src="orange.png"><h4>오렌지</h4></a>
+        <a href="strawberry.html"><img src="strawberry.png"><h4>딸기</h4></a>
     </div>
 </body>
 </html>

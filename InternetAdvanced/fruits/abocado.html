@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시애틀 쇼핑몰 > 과일 > 아보카도</title>
+    <style>
+        body {
+            padding: 1rem;
+            background-color: rgb(248, 248, 248);
+        }
+        h1 {
+            text-align: center;
+        }
+        hr {
+            border-color: lightskyblue;
+        }
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 600px;
+        }
+
+        p {
+            padding: 0.5rem;
+            animation: move 10s infinite;
+        }
+        @keyframes move {
+            0%   { background-color:lightcoral; transform: translate(-40%, -200px); }
+            25%  { background-color:lightgoldenrodyellow; transform: translate(40%, -200px); }
+            50%  { background-color:lightgreen; transform: translate(40%, 200px); }
+            75%  { background-color:lightskyblue; transform: translate(-40%, 200px); }
+            100% { background-color:lightcoral; transform: translate(-40%, -200px); }
+        }
+    </style>
+</head>
+<body>
+    <h1>시애틀 쇼핑몰</h1>
+    <hr>
+    <a href="category.html">
+        <div>
+            <p>저희 쇼핑몰에서는 과일, 채소, 과자, 음료를 판매하고 있습니다.</p>
+        </div>
+    </a>
+</body>
+</html>
