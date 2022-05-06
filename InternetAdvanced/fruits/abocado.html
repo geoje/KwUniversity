@@ -16,34 +16,44 @@
         hr {
             border-color: lightskyblue;
         }
-        div {
+
+        body > a {
+            display: table;
+            margin: 0 0 1rem auto;
+        }
+
+        section {
             display: flex;
-            justify-content: center;
-            align-items: center;
-
-            height: 600px;
+            gap: 1rem;
         }
-
-        p {
-            padding: 0.5rem;
-            animation: move 10s infinite;
+        div:first-child {
+            width: 200px;
         }
-        @keyframes move {
-            0%   { background-color:lightcoral; transform: translate(-40%, -200px); }
-            25%  { background-color:lightgoldenrodyellow; transform: translate(40%, -200px); }
-            50%  { background-color:lightgreen; transform: translate(40%, 200px); }
-            75%  { background-color:lightskyblue; transform: translate(-40%, 200px); }
-            100% { background-color:lightcoral; transform: translate(-40%, -200px); }
+        img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+        h4 {
+            text-align: center;
+            margin: 1rem 0;
         }
     </style>
 </head>
 <body>
     <h1>시애틀 쇼핑몰</h1>
     <hr>
-    <a href="category.html">
+    <a href="javascript:history.back()">뒤로가기</a>
+    <section>
         <div>
-            <p>저희 쇼핑몰에서는 과일, 채소, 과자, 음료를 판매하고 있습니다.</p>
+            <img src="abocado.png">
+            <h4>아보카도</h4>
         </div>
-    </a>
+        <p>과일의 일종으로 원산지는 멕시코를 비롯한 라틴아메리카. 스페인, 멕시코에서는 아과카테(aguacate), 페루, 볼리비아, 칠레 그리고 아르헨티나 등 남아메리카에서는 팔타(Palta)라고 부른다.
+
+            아보카도란 이름은 고환을 의미하는 나와틀어 '아와카틀(ahuacatl)'에서 유래했다고 하지만 이는 반은 맞고 반은 틀린 내용으로, 나와틀어로 고환을 의미하는 단어는 사실 '아테틀(atetl)'이다. 아와카틀이란 단어가 나와틀어에서 고환을 의미하는 말로 사용된 것은 맞긴 맞지만 고환을 아보카도에 빗대어 돌려 부른 것이지 아보카도의 이름을 고환을 의미하는 말에서 따서 지은 것은 아니다.[1] 여튼 남미에선 이런 연유로 성적인 열매로 간주되어 정력에 좋다는 소문이 있다.
+            
+            복숭아, 자두 등처럼 핵과류(drupe)로 보이지만 식물학적으로는 포도 등과 같은 장과류(berry)에 속한다.</p>
+    </section>
 </body>
 </html>
