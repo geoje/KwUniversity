@@ -1,0 +1,37 @@
+1. // 한 행을 주석문 처리
+   /* 두 행 이상에 걸치는 주석문 처리 */
+   <!-- HTML 문서의 주석 -->
+2. title은 '주석문', body는 빈공간
+3. (1) 154
+   (2) 167
+4. (1) 24.81234
+   (2) 0.2758
+5. 상수를 한번 값이 정해지면 불변, 변수는 값이 계속 변할 수 있으므로 가변입니다.
+6. 전역 변수는 a1이고 지역변수는 a3입니다. 변수가 인쇄한 값은 10, 30 입니다.
+   그리고 변수 선언과 호출 모두 오류가 있어서 의도한대로 전역, 지역 변수를 사용하도록 하였습니다.
+        var a1=10, a2=20;
+        function local_global() {
+            var a3=30, a4=40;
+            document.write(a1);
+            document.write(a2);
+            document.write(a3);
+            document.write(a4);
+        }
+        document.write(a1);
+        document.write(a2);
+        local_global();
+
+7. Sum, _book1, a1, a2
+8. 7
+9. 대입연산자
+10. Semicolon(;)
+11. 중괄호({ })
+12. (1) 12
+    (2) 5
+    (3) 0
+    (4) 2
+    (5) 1
+    (6) false
+    (7) true
+    (8) false
+    (9) 15

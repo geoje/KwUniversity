@@ -1,0 +1,63 @@
+13. a > b ? a : b
+14. (1) "100JavaSciprt"
+    (2) "100200"
+15. 괄호 연산자
+16.
+function min1(a, b) {
+    if (a < b) return a;
+    else return b;
+}
+function min2(a, b) {
+    return a < b ? a : b;
+}
+
+23.
+function even1(num) {
+    let even = 2, result = 0;
+    while (even <= num) {
+        result += even;
+        even += 2;
+    }
+    return result;
+}
+function even2(num) {
+    let even = 2, result = 0;
+    do {
+        result += even;
+        even += 2;
+    } while (even <= num);
+    return result;
+}
+function even3(num) {
+    let result = 0;
+    for (let even = 2; even <= num; even += 2)
+        result += even;
+    return result;
+}
+
+18.
+function hello() {
+    let token = 0, result = 0;
+    for (let i = 1; i <= 10; i++) {
+        result += (token += i);
+    }
+    return result;
+}
+
+19.
+function world() {
+    let arr = [];
+    for (let i = 1; i <= 100; i++)
+        if (i % 10 == 0)
+            arr.push(i);
+    return arr;
+}
+
+20. break;
+21. 3
+22.
+function sum(a, b) {
+    return a + b;
+}
+
+23. 2, 4
