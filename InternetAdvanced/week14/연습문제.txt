@@ -1,0 +1,82 @@
+1.
+for (let i = 0; i < 4; i++) {
+    for (int j = 0; j <= i; j++) console.log("*");
+    console.log("\n");
+}
+
+2.
+객체는 이름과 값을 가지는 여러 데이터들의 집합이고
+속성은 브라우저가 웹페이즈를 만날 떄 HTML를 파싱하여 DOM 객체를 생성한다.
+메소드는 함수의 역할을 하며 어떠한 기능들을 뭉쳐서 실행해며 재사용에 용이하다.
+
+3. p는 단순 글자 출력 pre는 있는 html에 있는 미리 정의된 형식을 출력 고정폭 글꼴 사용
+4. (1) 20
+   (2) 0
+   (3) 7
+
+5.
+<table>
+    <tr>
+        <td colspan="2">A</td>
+        <td rowspan="2">B</td>
+    </tr>
+    <tr>
+        <td rowspan="2">C</td>
+        <td>D</td>
+    </tr>
+    <tr>
+        <td colspan="2">E</td>
+    </tr>
+</table>
+
+6.
+(1)
+let s = prompt();
+if (s >= 90) document.write(s + "는A입니다.");
+else if (s >= 80) document.write(s + "는B입니다.");
+else if (s >= 70) document.write(s + "는C입니다.");
+else if (s >= 60) document.write(s + "는D입니다.");
+else document.write(s + "는E입니다.");
+
+(2)
+let s = parseInt(prompt());
+switch (Math.floor(s / 10)) {
+    case 10:
+    case 9:  document.write(s + "는A입니다."); break;
+    case 8:  document.write(s + "는B입니다."); break;
+    case 7:  document.write(s + "는C입니다."); break;
+    case 6:  document.write(s + "는D입니다."); break;
+    default: document.write(s + "는F입니다."); break;
+}
+
+7.
+#first {
+    background-color: lightgreen;
+    left: 0px;
+    top: 0px;
+}
+#second {
+    background-color: lightblue;
+    left: 3px;
+    top: 3px;
+}
+#third {
+    background-color: lightpink;
+    left: 60px;
+    top: 60px;
+}
+
+8.
+div {
+    animation-name: moving 10s infinite;
+}
+@keyframe moving {
+    0% { left: 0px; top 0px; }
+    50% { left: 200px; top 0px; }
+    100% { left: 200px; top 300px; }
+}
+
+9.
+function show() {
+    document.querySelectorAll("li").forEach(e => e.style.backgroundColor = "lightgreen");
+}
